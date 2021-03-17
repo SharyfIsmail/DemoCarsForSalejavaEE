@@ -10,17 +10,19 @@ import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PicDaoImpl extends AbstractDao implements PicDao {
     private static final String CREATE_PIC = "INSERT INTO PICS(AD_ID, PIC) VALUES (?,?)";
     private static final String GET_PICS = "SELECT PIC FROM PICS WHERE AD_ID = ?";
-    private static final String DELETE_PICS = "DELETE FROM PICS JOIN ADS ON USER_ID = ? WHERE AD_ID = ?";
+    private static final String SELECT_PIC_TO_DELETE = " SELECT  PIC_ID FROM PICS INNER JOIN ADS ON ADS.USER_ID = ? WHERE ADS.AD_ID = ?";
+    private static final String DELETE_FIRST_PIC = "DELETE FROM PICS WHERE PIC_ID = ?";
 
     @Override
     public List<Pic> save(List<Pic> pics) throws SQLException {
-        try (PreparedStatement preparedStatement = preparedStatement(CREATE_PIC)) {
+        try (PreparedStatement preparedStatement = preparedStatement(CREATE_PIC, Statement.NO_GENERATED_KEYS)) {
             for (Pic pic : pics) {
                 preparedStatement.setLong(1, pic.getAdId());
                 preparedStatement.setString(2, pic.getCarPic());
@@ -36,7 +38,7 @@ public class PicDaoImpl extends AbstractDao implements PicDao {
     @Override
     public List<Pic> get(Serializable adId) throws SQLException {
         List<Pic> pics = new ArrayList<>();
-        try (PreparedStatement preparedStatement = preparedStatement(GET_PICS)) {
+        try (PreparedStatement preparedStatement = preparedStatement(GET_PICS, Statement.NO_GENERATED_KEYS)) {
             preparedStatement.setLong(1, (long) adId);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -52,12 +54,19 @@ public class PicDaoImpl extends AbstractDao implements PicDao {
 
     @Override
     public void delete(Ad ad) throws SQLException {
-        try (PreparedStatement preparedStatement = preparedStatement(DELETE_PICS)) {
+        try (PreparedStatement preparedStatement = preparedStatement(SELECT_PIC_TO_DELETE, Statement.NO_GENERATED_KEYS)) {
             preparedStatement.setLong(1, ad.getUserId());
             preparedStatement.setLong(2, ad.getAdId());
-            int affectedRows = preparedStatement.executeUpdate();
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-            if (affectedRows == 0) {
+            if (resultSet.next()) {
+                long picId = resultSet.getLong("PIC_ID");
+
+                try (PreparedStatement preparedStatement1 = preparedStatement(DELETE_FIRST_PIC, Statement.NO_GENERATED_KEYS)) {
+                    preparedStatement1.setLong(1, picId);
+                    preparedStatement1.executeUpdate();
+                }
+            } else {
                 throw new ForbiddenActionException("Forbidden action", HttpServletResponse.SC_FORBIDDEN);
             }
         }

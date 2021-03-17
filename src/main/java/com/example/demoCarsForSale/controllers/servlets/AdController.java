@@ -23,11 +23,13 @@ public class AdController extends BaseController {
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) {
         long id = Parser.getIdFromPath(request.getPathInfo());
+
         UserResponse user = (UserResponse) request.getSession().getAttribute("user");
         Ad ad = Ad.builder()
             .userId(user.getUserId())
             .adId(id)
             .build();
+
         executeWithNoResult(() ->
             AD_SERVICE.delete(ad));
     }

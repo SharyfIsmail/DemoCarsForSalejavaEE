@@ -14,6 +14,7 @@ public final class PicRequestResponseMapper {
 
     public static List<Pic> convertPicRequestToPic(List<PicRequest> pics, long adId) {
         return pics.stream()
+            .filter(x -> x.getPic() != null)
             .map(x -> {
                 return Pic.builder()
                     .adId(adId)

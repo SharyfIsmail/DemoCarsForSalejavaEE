@@ -14,6 +14,7 @@ public final class UserPhoneRequestResponseMapper {
 
     public static List<UserPhone> convertPhoneRequestToUserPhone(List<PhoneRequest> phones, long userID) {
         return phones.stream()
+            .filter(x -> x.getPhone() != null)
             .map(x -> {
                 return UserPhone.builder()
                     .userId(userID)

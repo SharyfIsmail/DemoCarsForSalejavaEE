@@ -27,6 +27,7 @@ public final class UserResponseRequestMapper {
 
     public static UserResponse convertUserToUserResponse(User user) {
         return UserResponse.builder()
+            .userId(user.getId())
             .userName(user.getName())
             .build();
     }

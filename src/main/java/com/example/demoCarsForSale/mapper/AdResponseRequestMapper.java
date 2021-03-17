@@ -19,6 +19,7 @@ public final class AdResponseRequestMapper {
             .model(adRequest.getModel())
             .engineCapacity(adRequest.getEngineCapacity())
             .condition(adRequest.getCondition())
+            .power(adRequest.getPower())
             .mileage(adRequest.getMileAge())
             .createDate(new Timestamp(System.currentTimeMillis()))
             .editDate(new Timestamp(System.currentTimeMillis()))

@@ -2,6 +2,7 @@ package com.example.demoCarsForSale.services;
 
 import com.example.demoCarsForSale.controllers.dto.request.AdRequest;
 import com.example.demoCarsForSale.controllers.dto.response.AdDetailedResponse;
+import com.example.demoCarsForSale.controllers.dto.response.AdResponse;
 import com.example.demoCarsForSale.dao.model.Ad;
 
 import java.util.List;
@@ -12,11 +13,7 @@ public interface AdService {
 
     AdDetailedResponse get(long id);
 
-    default void update(AdRequest model) {
-    }
+    void delete(Ad id);
 
-    default void delete(Ad id) {
-    }
-
-    List<AdDetailedResponse> getAllUserAds(long userId);
+    List<AdResponse> getRecords(int page, int total);
 }

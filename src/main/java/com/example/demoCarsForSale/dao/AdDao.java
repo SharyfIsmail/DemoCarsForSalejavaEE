@@ -8,7 +8,7 @@ import java.util.List;
 public interface AdDao extends Dao<Ad> {
     List<Ad> getAllUserAds(long userId) throws SQLException;
 
-    List<Ad> getPagination(int start, int total) throws SQLException;
+    List<Ad> getRecords(int start, int total) throws SQLException;
 
     void updateEditDate(long ad) throws SQLException;
 
