@@ -11,6 +11,6 @@ public interface AuthService {
     UserResponse get(UserLogInRequest userLogInRequest);
 
     default boolean checkAuth(UserLogInRequest userLogInRequest, User user) {
-        return userLogInRequest.getUserPassword().equals(user.getPassword());
+        return user.getPassword().equals(userLogInRequest.getUserPassword());
     }
 }

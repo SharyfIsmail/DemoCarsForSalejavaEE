@@ -23,6 +23,7 @@ public final class AuthServiceHandler extends AbstractService implements AuthSer
 
         try {
             User user = LOG_IN.save(UserResponseRequestMapper.convertUserSignUpRequestToUser(userSignUpRequest));
+
             commit();
             userLogInResponse = UserResponseRequestMapper.convertUserToUserResponse(user);
         } catch (SQLException e) {
@@ -30,6 +31,7 @@ public final class AuthServiceHandler extends AbstractService implements AuthSer
             throw new BadRequestException("Make sure to type your name," +
                 " your email and your password to sign up", e, HttpServletResponse.SC_BAD_REQUEST);
         }
+
         return userLogInResponse;
     }
 
@@ -39,12 +41,15 @@ public final class AuthServiceHandler extends AbstractService implements AuthSer
 
         try {
             User user = LOG_IN.get(UserResponseRequestMapper.convertUserLogInRequestToUser(userLogInRequest).getEmail());
+
+            commit();
             userLogInResponse = UserResponseRequestMapper.convertUserToUserResponse(user);
 
             if (!checkAuth(userLogInRequest, user)) {
                 throw new BadRequestException("Incorrect password", HttpServletResponse.SC_BAD_REQUEST);
             }
         } catch (SQLException e) {
+            rollback();
             throw new InternalErrorException("Internal error", e, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
 

@@ -3,6 +3,7 @@ package com.example.demoCarsForSale.controllers.servlets;
 import com.example.demoCarsForSale.exeptions.AbstractThrowableException;
 import lombok.Builder;
 import lombok.Getter;
+import org.apache.log4j.Logger;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,13 +12,7 @@ import java.io.IOException;
 
 @WebServlet(name = "ServletErrorHandlerController", urlPatterns = "/errorHandler")
 public class ErrorHandlerController extends BaseController {
-
-    @Builder
-    @Getter
-    static class ErrorApiResponse {
-        private final String errorMessage;
-        private final String errorClass;
-    }
+    private static final Logger LOG = Logger.getLogger(ErrorHandlerController.class);
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -31,5 +26,14 @@ public class ErrorHandlerController extends BaseController {
             .errorClass(null)
             .errorMessage(throwable.getMessage())
             .build());
+
+        LOG.error(throwable.getClass() + ":" + throwable.getMessage());
+    }
+
+    @Builder
+    @Getter
+    static class ErrorApiResponse {
+        private final String errorMessage;
+        private final String errorClass;
     }
 }

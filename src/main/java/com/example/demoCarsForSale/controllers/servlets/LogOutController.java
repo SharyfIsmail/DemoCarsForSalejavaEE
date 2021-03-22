@@ -9,7 +9,6 @@ public class LogOutController extends BaseController {
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) {
-
         request.getSession(false).invalidate();
     }
 }

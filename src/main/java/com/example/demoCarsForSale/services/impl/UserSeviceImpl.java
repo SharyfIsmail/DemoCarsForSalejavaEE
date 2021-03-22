@@ -17,9 +17,11 @@ public class UserSeviceImpl extends AbstractService implements UserService {
     @Override
     public UserDto save(UserDto userDto) {
         UserDto userDto1;
+
         try {
             User user = USER_DAO.save(UserMapper.convertFromDto(userDto));
             userDto1 = UserMapper.convertToDto(user);
+
             commit();
         } catch (SQLException e) {
             rollback();
@@ -36,6 +38,7 @@ public class UserSeviceImpl extends AbstractService implements UserService {
         try {
             User user = USER_DAO.get(id);
             userDto = UserMapper.convertToDto(user);
+
             commit();
         } catch (SQLException e) {
             rollback();

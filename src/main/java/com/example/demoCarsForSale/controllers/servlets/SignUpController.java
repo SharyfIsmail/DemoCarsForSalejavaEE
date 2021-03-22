@@ -19,8 +19,8 @@ public class SignUpController extends BaseController {
 
         executeWithResult(response, () -> {
             UserResponse user = AUTH_SERVICE.save(userSignUpRequest);
-            request.getSession(true)
-                .setAttribute("user", user);
+            request.getSession(true).setAttribute("user", user);
+
             return user;
         });
     }

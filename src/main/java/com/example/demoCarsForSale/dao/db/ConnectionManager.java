@@ -1,15 +1,15 @@
 package com.example.demoCarsForSale.dao.db;
 
 import com.example.demoCarsForSale.exeptions.ConnectionFailedException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Connection;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ConnectionManager {
     private static final ThreadLocal<Connection> THREAD_LOCAL = new ThreadLocal<>();
-
-    private ConnectionManager() {
-    }
 
     /**
      * @return Connection

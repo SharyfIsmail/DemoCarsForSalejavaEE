@@ -1,9 +1,9 @@
 package com.example.demoCarsForSale.controllers.servlets;
 
 import com.example.demoCarsForSale.controllers.dto.UserDto;
+import com.example.demoCarsForSale.controllers.utils.UriUtil;
 import com.example.demoCarsForSale.services.UserService;
 import com.example.demoCarsForSale.services.impl.UserSeviceImpl;
-import com.example.demoCarsForSale.utils.Parser;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +16,7 @@ public class ServletUserController extends BaseController {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         executeWithResult(response, () ->
-            USER_SERVICE.get(Parser.getIdFromPath(request.getPathInfo())));
+            USER_SERVICE.get(UriUtil.getIdFromPath(request.getPathInfo())));
     }
 
     @Override
@@ -34,6 +34,6 @@ public class ServletUserController extends BaseController {
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) {
         executeWithNoResult(() ->
-            USER_SERVICE.delete(Parser.getIdFromPath(request.getPathInfo())));
+            USER_SERVICE.delete(UriUtil.getIdFromPath(request.getPathInfo())));
     }
 }

@@ -2,12 +2,15 @@ package com.example.demoCarsForSale.dao.db;
 
 import com.example.demoCarsForSale.exeptions.ConnectionFailedException;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DataSource {
     private static final String URL;
     private static final String NAME;
@@ -37,9 +40,6 @@ public final class DataSource {
         HIKARI_DATA_SOURCE.setAutoCommit(false);
         HIKARI_DATA_SOURCE.setMinimumIdle(MIN);
         HIKARI_DATA_SOURCE.setMaximumPoolSize(MAX);
-    }
-
-    private DataSource() {
     }
 
     public static Connection getConnection() throws SQLException {

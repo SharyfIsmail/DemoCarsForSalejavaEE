@@ -16,6 +16,9 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
     private static final String DELETE_USER = "DELETE FROM USERS WHERE USER_ID = ?";
     private static final String GET_USER = "SELECT * FROM USERS WHERE USER_ID = ?";
     private static final String UPDATE_USER = "UPDATE USERS SET USER_NAME = ?, PASSWORD = ? WHERE USER_ID = ?";
+    private static final String USER_ID = "USER_ID";
+    private static final String USER_NAME = "USER_NAME";
+    private static final String PASSWORD = "PASSWORD";
 
     @Override
     public User save(User model) throws SQLException {
@@ -30,10 +33,12 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
     }
 
     @Override
-    public void delete(Serializable object) throws SQLException {
+    public void delete(Object object) throws SQLException {
         try (PreparedStatement preparedStatement = ConnectionManager.getConnection().prepareStatement(DELETE_USER)) {
             preparedStatement.setLong(1, (long) object);
+
             int affectedRows = preparedStatement.executeUpdate();
+
             if (affectedRows == 0) {
                 throw new EntityNotFoundException("Entity is not found :", HttpServletResponse.SC_NOT_FOUND);
             }
@@ -41,7 +46,7 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
     }
 
     @Override
-    public User get(Serializable object) throws SQLException {
+    public User get(Object object) throws SQLException {
         User user;
 
         try (PreparedStatement preparedStatement = ConnectionManager.getConnection().prepareStatement(GET_USER)) {
@@ -51,9 +56,9 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
             if (resultSet.next()) {
                 do {
                     user = User.builder()
-                        .id(resultSet.getLong("USER_ID"))
-                        .name(resultSet.getString("USER_NAME"))
-                        .password(resultSet.getString("PASSWORD"))
+                        .id(resultSet.getLong(USER_ID))
+                        .name(resultSet.getString(USER_NAME))
+                        .password(resultSet.getString(PASSWORD))
                         .build();
                 } while (resultSet.next());
             } else {
@@ -70,6 +75,7 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
             preparedStatement.setString(1, model.getName());
             preparedStatement.setString(2, model.getPassword());
             preparedStatement.setLong(3, model.getId());
+
             int affectedRows = preparedStatement.executeUpdate();
 
             if (affectedRows == 0) {

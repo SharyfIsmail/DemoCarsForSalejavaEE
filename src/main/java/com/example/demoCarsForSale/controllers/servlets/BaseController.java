@@ -47,8 +47,9 @@ public abstract class BaseController extends HttpServlet {
     }
 
     protected static <T> T getRequestObject(HttpServletRequest request, Class<T> classType) {
+        String message = getBody(request);
+
         try {
-            String message = getBody(request);
             LOGGER.info(message);
             return MAPPER.readValue(message, classType);
         } catch (IOException e) {
@@ -61,12 +62,14 @@ public abstract class BaseController extends HttpServlet {
 
         try (BufferedReader reader = request.getReader()) {
             String line;
+
             while ((line = reader.readLine()) != null) {
                 stringBuilder.append(line);
             }
         } catch (IOException e) {
             throw new InternalErrorException("Receiving Json error", e, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+
         return stringBuilder.toString();
     }
 

@@ -1,10 +1,10 @@
 package com.example.demoCarsForSale.controllers.servlets;
 
 import com.example.demoCarsForSale.controllers.dto.response.UserResponse;
+import com.example.demoCarsForSale.controllers.utils.UriUtil;
 import com.example.demoCarsForSale.dao.model.Ad;
 import com.example.demoCarsForSale.services.AdService;
 import com.example.demoCarsForSale.services.impl.AdServiceHandler;
-import com.example.demoCarsForSale.utils.Parser;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,12 +17,12 @@ public class AdController extends BaseController {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         executeWithResult(response, () ->
-            AD_SERVICE.get(Parser.getIdFromPath(request.getPathInfo())));
+            AD_SERVICE.get(UriUtil.getIdFromPath(request.getPathInfo())));
     }
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) {
-        long id = Parser.getIdFromPath(request.getPathInfo());
+        long id = UriUtil.getIdFromPath(request.getPathInfo());
 
         UserResponse user = (UserResponse) request.getSession().getAttribute("user");
         Ad ad = Ad.builder()
@@ -30,7 +30,6 @@ public class AdController extends BaseController {
             .adId(id)
             .build();
 
-        executeWithNoResult(() ->
-            AD_SERVICE.delete(ad));
+        executeWithNoResult(() -> AD_SERVICE.delete(ad));
     }
 }

@@ -10,7 +10,6 @@ import com.example.demoCarsForSale.exeptions.InternalErrorException;
 import com.example.demoCarsForSale.services.PicService;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -21,8 +20,10 @@ public class PicServiceHandler extends AbstractService implements PicService {
     @Override
     public List<Pic> save(List<Pic> pics) {
         try {
+            List<Pic> pics1 = PIC_DAO.save(pics);
+            commit();
 
-            return PIC_DAO.save(pics);
+            return pics1;
         } catch (SQLException e) {
             rollback();
             throw new InternalErrorException("Oops, something went wrong", e, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -30,10 +31,12 @@ public class PicServiceHandler extends AbstractService implements PicService {
     }
 
     @Override
-    public List<Pic> get(Serializable adId) {
+    public List<Pic> get(Object adId) {
         try {
+            List<Pic> pics1 = PIC_DAO.get(adId);
+            commit();
 
-            return PIC_DAO.get(adId);
+            return pics1;
         } catch (SQLException e) {
             rollback();
             throw new InternalErrorException("Oops, something went wrong while fetching Pics", e, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -41,10 +44,10 @@ public class PicServiceHandler extends AbstractService implements PicService {
     }
 
     @Override
-    public void delete(Ad ad) {
+    public void delete(Object ad) {
         try {
             PIC_DAO.delete(ad);
-            AD_DAO.updateEditDate(ad.getAdId());
+            AD_DAO.updateEditDate(((Ad) ad).getAdId());
             commit();
         } catch (SQLException e) {
             rollback();

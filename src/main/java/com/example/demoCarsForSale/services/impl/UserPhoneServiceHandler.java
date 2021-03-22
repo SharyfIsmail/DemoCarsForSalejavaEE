@@ -1,7 +1,6 @@
 package com.example.demoCarsForSale.services.impl;
 
 import com.example.demoCarsForSale.dao.UserPhoneDao;
-import com.example.demoCarsForSale.dao.impl.AbstractDao;
 import com.example.demoCarsForSale.dao.impl.UserPhoneDaoImpl;
 import com.example.demoCarsForSale.dao.model.UserPhone;
 import com.example.demoCarsForSale.exeptions.BadRequestException;
