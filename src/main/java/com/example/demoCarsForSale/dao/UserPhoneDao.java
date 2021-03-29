@@ -4,7 +4,5 @@ import com.example.demoCarsForSale.dao.model.UserPhone;
 
 import java.util.List;
 
-public interface UserPhoneDao extends Dao<UserPhone> {
-
-    List<UserPhone> savePhones(List<UserPhone> pics);
+public interface UserPhoneDao extends Dao<List<UserPhone>> {
 }
