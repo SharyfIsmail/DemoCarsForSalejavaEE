@@ -1,6 +1,6 @@
 package com.example.demoCarsForSale.controllers.utils;
 
-import com.example.demoCarsForSale.exeptions.BadRequestException;
+import com.example.demoCarsForSale.exceptions.BadRequestException;
 
 import javax.servlet.http.HttpServletResponse;
 

@@ -3,84 +3,59 @@ package com.example.demoCarsForSale.dao.impl;
 import com.example.demoCarsForSale.dao.UserDao;
 import com.example.demoCarsForSale.dao.db.ConnectionManager;
 import com.example.demoCarsForSale.dao.model.User;
-import com.example.demoCarsForSale.exeptions.EntityNotFoundException;
+import com.example.demoCarsForSale.dao.model.UserExtraInfo;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.Serializable;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.persistence.EntityManager;
+import java.util.List;
 
 public class UserDaoImpl extends AbstractDao implements UserDao {
-    private static final String CREATE_USER = "INSERT INTO USERS (USER_NAME, PASSWORD) VALUES(?,?)";
-    private static final String DELETE_USER = "DELETE FROM USERS WHERE USER_ID = ?";
-    private static final String GET_USER = "SELECT * FROM USERS WHERE USER_ID = ?";
-    private static final String UPDATE_USER = "UPDATE USERS SET USER_NAME = ?, PASSWORD = ? WHERE USER_ID = ?";
-    private static final String USER_ID = "USER_ID";
-    private static final String USER_NAME = "USER_NAME";
-    private static final String PASSWORD = "PASSWORD";
 
     @Override
-    public User save(User model) throws SQLException {
-        try (PreparedStatement preparedStatement = ConnectionManager.getConnection().prepareStatement(CREATE_USER)) {
-            preparedStatement.setString(1, model.getName());
-            preparedStatement.setString(2, model.getPassword());
-            preparedStatement.executeUpdate();
-            model.setId(preparedStatement.getGeneratedKeys().getLong(1));
-        }
-
-        return model;
+    public User findByEmail(String email) {
+        return entityManager()
+            .createQuery("FROM User user where user.email = :email", getClassType())
+            .setParameter("email", email)
+            .getSingleResult();
     }
 
     @Override
-    public void delete(Object object) throws SQLException {
-        try (PreparedStatement preparedStatement = ConnectionManager.getConnection().prepareStatement(DELETE_USER)) {
-            preparedStatement.setLong(1, (long) object);
+    public boolean existsByEmail(String email) {
+        EntityManager entityManager = ConnectionManager.getConnection();
 
-            int affectedRows = preparedStatement.executeUpdate();
-
-            if (affectedRows == 0) {
-                throw new EntityNotFoundException("Entity is not found :", HttpServletResponse.SC_NOT_FOUND);
-            }
+        if (email == null) {
+            return false;
         }
+
+        Long count = (Long) entityManager.createQuery("SELECT COUNT(entity.email) FROM User entity WHERE entity.email = :email")
+            .setParameter("email", email)
+            .getSingleResult();
+
+        return (count.equals(0L) ? false : true);
     }
 
     @Override
-    public User get(Object object) throws SQLException {
-        User user;
+    public List<UserExtraInfo> findAllWithExtraInfo() {
+        EntityManager entityManager = entityManager();
 
-        try (PreparedStatement preparedStatement = ConnectionManager.getConnection().prepareStatement(GET_USER)) {
-            preparedStatement.setLong(1, (long) object);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                do {
-                    user = User.builder()
-                        .id(resultSet.getLong(USER_ID))
-                        .name(resultSet.getString(USER_NAME))
-                        .password(resultSet.getString(PASSWORD))
-                        .build();
-                } while (resultSet.next());
-            } else {
-                throw new EntityNotFoundException("Entity is not fount :", HttpServletResponse.SC_NOT_FOUND);
-            }
-        }
-
-        return user;
+        return entityManager.createQuery("SELECT NEW com.example.demoCarsForSale.dao.model.UserExtraInfo" +
+            "(user.name, user.email, ad.size)" +
+            " FROM User user " +
+            " LEFT JOIN user.ads ad", UserExtraInfo.class)
+            .getResultList();
     }
 
     @Override
-    public void update(User model) throws SQLException {
-        try (PreparedStatement preparedStatement = ConnectionManager.getConnection().prepareStatement(UPDATE_USER)) {
-            preparedStatement.setString(1, model.getName());
-            preparedStatement.setString(2, model.getPassword());
-            preparedStatement.setLong(3, model.getId());
+    public User findUserWithPhones(long id) {
+        EntityManager entityManager = entityManager();
 
-            int affectedRows = preparedStatement.executeUpdate();
+        return entityManager.createQuery("SELECT user FROM User user" +
+            " LEFT JOIN FETCH user.userPhones WHERE user.id =:id", User.class)
+            .setParameter("id", id)
+            .getSingleResult();
+    }
 
-            if (affectedRows == 0) {
-                throw new EntityNotFoundException("Entity is not fount :", HttpServletResponse.SC_NOT_FOUND);
-            }
-        }
+    @Override
+    public Class<User> getClassType() {
+        return User.class;
     }
 }

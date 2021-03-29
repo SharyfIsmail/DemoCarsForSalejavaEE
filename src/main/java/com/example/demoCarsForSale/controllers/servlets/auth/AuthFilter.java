@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(servletNames = {"UserController", "AdCreatorController",
-    "AdController", "picController"})
+@WebFilter(servletNames = {"AdCreatorController",
+    "AdController", "picController", "LogOutController", "UpdateController"})
 public class AuthFilter implements Filter {
 
     @Override

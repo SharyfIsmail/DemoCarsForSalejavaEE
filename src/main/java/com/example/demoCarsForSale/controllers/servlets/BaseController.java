@@ -1,7 +1,7 @@
 package com.example.demoCarsForSale.controllers.servlets;
 
-import com.example.demoCarsForSale.exeptions.BadRequestException;
-import com.example.demoCarsForSale.exeptions.InternalErrorException;
+import com.example.demoCarsForSale.exceptions.BadRequestException;
+import com.example.demoCarsForSale.exceptions.InternalErrorException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
 

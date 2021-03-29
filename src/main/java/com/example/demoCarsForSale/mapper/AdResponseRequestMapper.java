@@ -6,14 +6,13 @@ import com.example.demoCarsForSale.dao.model.Ad;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class AdResponseRequestMapper {
 
-    public static Ad convertUserAdRequestToAd(AdRequest adRequest, long userId) {
+    public static Ad convertUserAdRequestToAd(AdRequest adRequest) {
         return Ad.builder()
-            .userId(userId)
             .year(adRequest.getYear())
             .brand(adRequest.getBrand())
             .model(adRequest.getModel())
@@ -21,14 +20,15 @@ public final class AdResponseRequestMapper {
             .condition(adRequest.getCondition())
             .power(adRequest.getPower())
             .mileage(adRequest.getMileAge())
-            .createDate(new Timestamp(System.currentTimeMillis()))
-            .editDate(new Timestamp(System.currentTimeMillis()))
+            .createDate(LocalDateTime.now())
+            .editDate(LocalDateTime.now())
             .build();
     }
 
     public static AdDetailedResponse convertAdToAdDetailedResponse(Ad ad) {
         return AdDetailedResponse.builder()
             .adId(ad.getAdId())
+            .userName(ad.getUser().getName())
             .year(ad.getYear())
             .brand(ad.getBrand())
             .model(ad.getModel())
