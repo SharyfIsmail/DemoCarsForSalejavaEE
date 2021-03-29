@@ -12,25 +12,20 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PicRequestResponseMapper {
 
-    public static List<Pic> convertPicRequestToPic(List<PicRequest> pics, long adId) {
+    public static List<Pic> convertPicRequestToPic(List<PicRequest> pics) {
         return pics.stream()
             .filter(x -> x.getPic() != null)
-            .map(x -> {
-                return Pic.builder()
-                    .adId(adId)
-                    .carPic(x.getPic())
-                    .build();
-            })
+            .map(x -> Pic.builder()
+                .carPic(x.getPic())
+                .build())
             .collect(Collectors.toList());
     }
 
     public static List<PicResponse> convertPicToPicResponse(List<Pic> pics) {
         return pics.stream()
-            .map(x -> {
-                return PicResponse.builder()
-                    .pic(x.getCarPic())
-                    .build();
-            })
+            .map(x -> PicResponse.builder()
+                .pic(x.getCarPic())
+                .build())
             .collect(Collectors.toList());
     }
 }

@@ -12,17 +12,16 @@ import java.util.stream.Collectors;
 public final class PaginationMapper {
     public static List<AdResponse> convertPaginationToAdResponse(List<Pagination> paginations) {
         return paginations.stream()
-            .map(x ->
-                AdResponse.builder()
-                    .adId(x.getAdId())
-                    .condition(x.getCondition())
-                    .year(x.getYear())
-                    .brand(x.getBrand())
-                    .userName(x.getUserName())
-                    .model(x.getModel())
-                    .createDate(x.getCreateDate().toString())
-                    .picCount(x.getPicSize())
-                    .build())
+            .map(x -> AdResponse.builder()
+                .adId(x.getAdId())
+                .condition(x.getCondition().toString())
+                .year(x.getYear())
+                .brand(x.getBrand())
+                .userName(x.getUserName())
+                .model(x.getModel())
+                .createDate(x.getCreateDate().toString())
+                .picCount(x.getPicSize())
+                .build())
             .collect(Collectors.toList());
     }
 }
