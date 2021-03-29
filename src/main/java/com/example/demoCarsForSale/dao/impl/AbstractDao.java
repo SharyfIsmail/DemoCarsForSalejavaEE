@@ -2,12 +2,16 @@ package com.example.demoCarsForSale.dao.impl;
 
 import com.example.demoCarsForSale.dao.db.ConnectionManager;
 
-import javax.persistence.EntityManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public abstract class AbstractDao {
 
-    protected static EntityManager entityManager() {
-        return ConnectionManager.getConnection();
+    protected static PreparedStatement preparedStatement(String sqlCommand, int statement) throws SQLException {
+        return ConnectionManager.getConnection().prepareStatement(sqlCommand, statement);
+    }
+
+    protected static PreparedStatement preparedStatement(String sqlCommand) throws SQLException {
+        return ConnectionManager.getConnection().prepareStatement(sqlCommand);
     }
 }
-

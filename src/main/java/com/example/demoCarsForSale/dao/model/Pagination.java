@@ -1,12 +1,12 @@
 package com.example.demoCarsForSale.dao.model;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
-@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 public class Pagination {
@@ -17,5 +17,5 @@ public class Pagination {
     private Condition condition;
     private String userName;
     private int picSize;
-    private LocalDateTime createDate;
+    private Timestamp createDate;
 }

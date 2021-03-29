@@ -12,21 +12,25 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class UserPhoneRequestResponseMapper {
 
-    public static List<UserPhone> convertPhoneRequestToUserPhone(List<PhoneRequest> phones) {
+    public static List<UserPhone> convertPhoneRequestToUserPhone(List<PhoneRequest> phones, long userID) {
         return phones.stream()
             .filter(x -> x.getPhone() != null)
-            .map(x -> UserPhone.builder()
-                .phone(x.getPhone())
-                .build())
+            .map(x -> {
+                return UserPhone.builder()
+                    .userId(userID)
+                    .phone(x.getPhone())
+                    .build();
+            })
             .collect(Collectors.toList());
     }
 
     public static List<PhoneResponse> convertUserPhoneToPhoneResponse(List<UserPhone> phones) {
         return phones.stream()
-            .map(x -> PhoneResponse.builder()
-                .phone(x.getPhone())
-                .build()
-            )
+            .map(x -> {
+                return PhoneResponse.builder()
+                    .phone(x.getPhone())
+                    .build();
+            })
             .collect(Collectors.toList());
     }
 }
