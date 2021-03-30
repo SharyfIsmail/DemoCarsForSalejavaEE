@@ -1,7 +1,7 @@
 package com.example.demoCarsForSale.dao;
 
 import com.example.demoCarsForSale.dao.model.User;
-import com.example.demoCarsForSale.dao.model.UserExtraInfo;
+import com.example.demoCarsForSale.controllers.dto.projection.UserExtraInfo;
 
 import java.util.List;
 

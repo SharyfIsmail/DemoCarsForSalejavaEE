@@ -2,8 +2,8 @@ package com.example.demoCarsForSale.controllers.servlets;
 
 import com.example.demoCarsForSale.controllers.dto.response.UserResponse;
 import com.example.demoCarsForSale.controllers.utils.UriUtil;
-import com.example.demoCarsForSale.services.PicHandler;
-import com.example.demoCarsForSale.services.impl.PicService;
+import com.example.demoCarsForSale.services.PicService;
+import com.example.demoCarsForSale.services.impl.PicServiceImpl;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "picController", urlPatterns = "/api/v1/pics/*")
 public class PicController extends BaseController {
-    private static final PicHandler PIC_HANDLER = new PicService();
+    private static final PicService PIC_HANDLER = new PicServiceImpl();
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) {

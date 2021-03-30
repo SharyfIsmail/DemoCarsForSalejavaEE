@@ -1,8 +1,8 @@
 package com.example.demoCarsForSale.dao.impl;
 
+import com.example.demoCarsForSale.controllers.dto.projection.AdShortInfo;
 import com.example.demoCarsForSale.dao.AdDao;
 import com.example.demoCarsForSale.dao.model.Ad;
-import com.example.demoCarsForSale.dao.model.Pagination;
 import com.example.demoCarsForSale.dao.model.Pic;
 
 import javax.persistence.EntityManager;
@@ -10,27 +10,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class AdDaoImpl extends AbstractDao implements AdDao {
-
-    @Override
-    public List<Pagination> getRecords(int start, int total) {
-        EntityManager entityManager = entityManager();
-
-        return entityManager.createQuery("SELECT NEW com.example.demoCarsForSale.dao.model.Pagination(" +
-            " ad.id," +
-            " ad.year," +
-            " ad.brand," +
-            " ad.model," +
-            " ad.condition," +
-            " ad.user.name," +
-            " ad.pics.size," +
-            " ad.createDate)" +
-            " FROM Ad ad" +
-            " LEFT JOIN ad.user" +
-            " LEFT JOIN ad.pics", Pagination.class)
-            .setFirstResult((start - 1) * total)
-            .setMaxResults(total)
-            .getResultList();
-    }
 
     @Override
     public void deletePicFromAd(Pic pic) {
@@ -45,6 +24,27 @@ public class AdDaoImpl extends AbstractDao implements AdDao {
         ad.removePicFromAd(pic);
         ad.setEditDate(LocalDateTime.now());
         update(ad);
+    }
+
+    @Override
+    public List<AdShortInfo> getRecords(int start, int total) {
+        EntityManager entityManager = entityManager();
+
+        return entityManager.createQuery("SELECT NEW com.example.demoCarsForSale.controllers.dto.projection.AdShortInfo(" +
+            " ad.id," +
+            " ad.year," +
+            " ad.brand," +
+            " ad.model," +
+            " ad.condition," +
+            " ad.user.name," +
+            " ad.pics.size," +
+            " ad.createDate)" +
+            " FROM Ad ad" +
+            " LEFT JOIN ad.user" +
+            " LEFT JOIN ad.pics", AdShortInfo.class)
+            .setFirstResult((start - 1) * total)
+            .setMaxResults(total)
+            .getResultList();
     }
 
     public Ad getDetailedInfoAboutAd(long id) {

@@ -1,9 +1,9 @@
 package com.example.demoCarsForSale.dao.impl;
 
+import com.example.demoCarsForSale.controllers.dto.projection.UserExtraInfo;
 import com.example.demoCarsForSale.dao.UserDao;
-import com.example.demoCarsForSale.dao.db.ConnectionManager;
+import com.example.demoCarsForSale.dao.db.EntityManagerFactoryProvider;
 import com.example.demoCarsForSale.dao.model.User;
-import com.example.demoCarsForSale.dao.model.UserExtraInfo;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -20,7 +20,7 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
 
     @Override
     public boolean existsByEmail(String email) {
-        EntityManager entityManager = ConnectionManager.getConnection();
+        EntityManager entityManager = EntityManagerFactoryProvider.getEntityManager();
 
         if (email == null) {
             return false;
@@ -30,14 +30,14 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
             .setParameter("email", email)
             .getSingleResult();
 
-        return (count.equals(0L) ? false : true);
+        return !count.equals(0L);
     }
 
     @Override
     public List<UserExtraInfo> findAllWithExtraInfo() {
         EntityManager entityManager = entityManager();
 
-        return entityManager.createQuery("SELECT NEW com.example.demoCarsForSale.dao.model.UserExtraInfo" +
+        return entityManager.createQuery("SELECT NEW com.example.demoCarsForSale.controllers.dto.projection.UserExtraInfo" +
             "(user.name, user.email, ad.size)" +
             " FROM User user " +
             " LEFT JOIN user.ads ad", UserExtraInfo.class)
