@@ -48,12 +48,12 @@ public class User {
         orphanRemoval = true)
     private List<UserPhone> userPhones;
 
-    public void setAd(Ad ad) {
+    public void addAdToUser(Ad ad) {
         ads.add(ad);
         ad.setUser(this);
     }
 
-    public void setUserPhone(UserPhone userPhone) {
+    public void addPhoneToUser(UserPhone userPhone) {
         userPhones.add(userPhone);
         userPhone.setUser(this);
     }

@@ -20,7 +20,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -73,16 +72,12 @@ public class Ad {
         orphanRemoval = true)
     private List<Pic> pics;
 
-    public void setPic(Pic pic) {
-        if (pics == null) {
-            pics = new ArrayList<>();
-        }
-
+    public void addToPic(Pic pic) {
         pics.add(pic);
         pic.setAd(this);
     }
 
-    public void removePic(Pic pic) {
+    public void removePicFromAd(Pic pic) {
         pics.remove(pic);
         pic.setAd(null);
     }

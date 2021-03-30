@@ -8,6 +8,7 @@ import com.example.demoCarsForSale.controllers.dto.response.AdDetailedResponse;
 import com.example.demoCarsForSale.controllers.dto.response.UserResponse;
 import com.example.demoCarsForSale.dao.model.Condition;
 import com.example.demoCarsForSale.services.impl.AdService;
+import com.example.demoCarsForSale.services.impl.PicService;
 import com.example.demoCarsForSale.services.impl.UserDeleteService;
 import com.example.demoCarsForSale.services.impl.UserSignUpService;
 import org.junit.jupiter.api.AfterAll;
@@ -24,7 +25,7 @@ public class TestAd {
     public static final UserSignUpRequest USER_SIGN_UP_REQUEST = new UserSignUpRequest();
     public static final UserSignUpService USER_SIGN_UP_SERVICE = new UserSignUpService();
     public static final UserDeleteService USER_DELETE_SERVICE = new UserDeleteService();
-
+    public static final PicService PIC_SERVICE = new PicService();
     public static final AdService adService = new AdService();
     public static final AdRequest adRequest = new AdRequest();
     public static final PhoneRequest phoneRequest1 = new PhoneRequest();
@@ -51,12 +52,12 @@ public class TestAd {
         adRequest.setYear(2011);
         adRequest.setModel("S");
 
-        USER_SIGN_UP_REQUEST.setUserEmail("ffrsd@.com");
+        USER_SIGN_UP_REQUEST.setUserEmail("ffrfsd@.com");
         USER_SIGN_UP_REQUEST.setUserName("Andrey");
         USER_SIGN_UP_REQUEST.setUserPassword("ABS");
     }
 
-    @BeforeAll
+    @Test
     public static void createUserCreateAd() {
         userResponse = USER_SIGN_UP_SERVICE.createUser(USER_SIGN_UP_REQUEST);
         assertEquals(userResponse.getUserName(), USER_SIGN_UP_REQUEST.getUserName());
@@ -68,9 +69,15 @@ public class TestAd {
     public void getAd() {
         AdDetailedResponse adGet = adService.getDetailedInfoAboutAd(adDetailedResponse.getAdId());
         assertEquals(adGet.getAdId(), adDetailedResponse.getAdId());
+        System.out.println(adGet.getUserName());
     }
 
-    @AfterAll
+    @Test
+    public void deletePic() {
+        PIC_SERVICE.delete(7, 7);
+    }
+
+    @Test
     public static void deleteAd() {
         adService.deleteAd(adDetailedResponse.getAdId(), userResponse.getUserId());
         USER_DELETE_SERVICE.delete(userResponse.getUserId());
