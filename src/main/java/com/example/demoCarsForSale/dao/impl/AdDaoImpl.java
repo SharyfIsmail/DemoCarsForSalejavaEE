@@ -36,10 +36,12 @@ public class AdDaoImpl extends AbstractDao implements AdDao {
     public void deletePicFromAd(Pic pic) {
         EntityManager entityManager = entityManager();
         long adId = pic.getAd().getAdId();
+
         Ad ad = entityManager.createQuery("SELECT ad FROM Ad ad" +
             " LEFT JOIN FETCH ad.pics WHERE ad.id=:adId", Ad.class)
             .setParameter("adId", adId)
             .getSingleResult();
+
         ad.removePicFromAd(pic);
         ad.setEditDate(LocalDateTime.now());
         update(ad);
