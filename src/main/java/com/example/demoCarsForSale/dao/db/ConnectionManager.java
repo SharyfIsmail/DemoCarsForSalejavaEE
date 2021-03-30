@@ -17,9 +17,7 @@ public final class ConnectionManager {
     }
 
     public static void clear() {
-        EntityManager entityManager = getConnection();
-
-        if (entityManager != null) {
+        if (getConnection() != null) {
             THREAD_LOCAL.remove();
         }
     }
