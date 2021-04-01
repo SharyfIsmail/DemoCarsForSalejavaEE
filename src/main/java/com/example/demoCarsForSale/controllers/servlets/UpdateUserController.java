@@ -14,7 +14,7 @@ public class UpdateUserController extends BaseController {
     private static final UserService USER_UPDATE_HANDLER = new UserServiceImpl();
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) {
         UserUpdateRequest userUpdateRequest = getRequestObject(request, UserUpdateRequest.class);
         UserResponse attribute = (UserResponse) request.getSession().getAttribute("user");
 
