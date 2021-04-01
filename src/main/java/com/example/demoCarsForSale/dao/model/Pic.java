@@ -27,7 +27,7 @@ public class Pic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PIC_ID", nullable = false)
-    private long picId;
+    private Long picId;
 
     @Column(name = "PIC")
     private String carPic;

@@ -33,7 +33,7 @@ public class Ad {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "AD_ID", nullable = false)
-    private long adId;
+    private Long adId;
 
     @Column(name = "YEAR", nullable = false)
     private int year;

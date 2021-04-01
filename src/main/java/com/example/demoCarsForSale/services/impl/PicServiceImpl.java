@@ -20,7 +20,7 @@ public class PicServiceImpl extends AbstractService implements PicService {
         Pic picToDelete = PIC_DAO.existsById(id) ?
             PIC_DAO.getByIdWithAd(id) : null;
 
-        if (picToDelete != null && isAbleToDelete(userId, picToDelete.getAd().getUser().getId())) {
+        if (picToDelete != null && isAbleToDelete(userId, picToDelete.getAd().getUser().getUserId())) {
             AD_DAO.deletePicFromAd(picToDelete);
 
             closeTransaction();

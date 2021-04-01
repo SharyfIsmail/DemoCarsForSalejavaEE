@@ -73,7 +73,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         Ad ad;
         if (AD_DAO.existsById(id)) {
             ad = AD_DAO.getDetailedInfoAboutAd(id);
-            user = USER_DAO.findUserWithPhones(ad.getUser().getId());
+            user = USER_DAO.findUserWithPhones(ad.getUser().getUserId());
 
             closeTransaction();
         } else {
@@ -96,7 +96,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
             AD_DAO.getDetailedInfoAboutAd(adId) :
             null;
 
-        if (adToDelete != null && isAbleToDelete(adToDelete.getUser().getId(), userId)) {
+        if (adToDelete != null && isAbleToDelete(adToDelete.getUser().getUserId(), userId)) {
             AD_DAO.delete(adId);
             closeTransaction();
         } else {

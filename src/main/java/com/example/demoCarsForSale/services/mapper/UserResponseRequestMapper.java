@@ -24,7 +24,7 @@ public final class UserResponseRequestMapper {
 
     public static UserResponse toResponse(User user) {
         return UserResponse.builder()
-            .userId(user.getId())
+            .userId(user.getUserId())
             .userName(user.getName())
             .build();
     }
