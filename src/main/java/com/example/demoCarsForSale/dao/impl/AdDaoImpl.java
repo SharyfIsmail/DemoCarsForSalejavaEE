@@ -30,7 +30,7 @@ public class AdDaoImpl extends AbstractDao implements AdDao {
     public List<AdShortInfo> getRecords(int start, int total) {
         EntityManager entityManager = entityManager();
 
-        return entityManager.createQuery("SELECT NEW com.example.demoCarsForSale.controllers.dto.projection.AdShortInfo(" +
+        return entityManager.createQuery("SELECT DISTINCT NEW com.example.demoCarsForSale.controllers.dto.projection.AdShortInfo(" +
             " ad.id," +
             " ad.year," +
             " ad.brand," +

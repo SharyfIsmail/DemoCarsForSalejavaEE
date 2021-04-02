@@ -13,7 +13,7 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
     @Override
     public User findByEmail(String email) {
         return entityManager()
-            .createQuery("FROM User user where user.email = :email", getClassType())
+            .createQuery("SELECT user FROM User user where user.email = :email", getClassType())
             .setParameter("email", email)
             .getSingleResult();
     }

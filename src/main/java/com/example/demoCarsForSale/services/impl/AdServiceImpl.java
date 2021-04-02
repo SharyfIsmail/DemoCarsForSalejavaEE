@@ -111,6 +111,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
         List<AdShortInfo> adShortInfos = AD_DAO.getRecords(start, total);
         closeTransaction();
 
-        return PaginationMapper.convertPaginationToAdResponse(adShortInfos);
+        return PaginationMapper.toResponses(adShortInfos);
     }
 }

@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PaginationMapper {
-    public static List<AdResponse> convertPaginationToAdResponse(List<AdShortInfo> adShortInfos) {
+    public static List<AdResponse> toResponses(List<AdShortInfo> adShortInfos) {
         return adShortInfos.stream()
             .map(x -> AdResponse.builder()
                 .adId(x.getAdId())

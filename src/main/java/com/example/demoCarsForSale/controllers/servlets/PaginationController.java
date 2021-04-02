@@ -17,7 +17,7 @@ public class PaginationController extends BaseController {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         executeWithResult(response, () -> {
             String stringValueOfPage = request.getParameter("page");
-            int page = (stringValueOfPage == null) ? DEFAULT_PAGE : Integer.parseInt(stringValueOfPage);
+            int page = (stringValueOfPage == null || stringValueOfPage.isEmpty()) ? DEFAULT_PAGE : Integer.parseInt(stringValueOfPage);
 
             return AD_HANDLER.getRecords(page, RECORDS_TO_SHOW);
         });
