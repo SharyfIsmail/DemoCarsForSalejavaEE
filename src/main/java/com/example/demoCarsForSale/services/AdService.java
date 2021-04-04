@@ -1,8 +1,8 @@
 package com.example.demoCarsForSale.services;
 
-import com.example.demoCarsForSale.controllers.dto.request.AdRequest;
-import com.example.demoCarsForSale.controllers.dto.response.AdDetailedResponse;
-import com.example.demoCarsForSale.controllers.dto.response.AdResponse;
+import com.example.demoCarsForSale.web.dto.request.AdRequest;
+import com.example.demoCarsForSale.web.dto.response.AdDetailedResponse;
+import com.example.demoCarsForSale.web.dto.response.AdResponse;
 
 import java.util.List;
 

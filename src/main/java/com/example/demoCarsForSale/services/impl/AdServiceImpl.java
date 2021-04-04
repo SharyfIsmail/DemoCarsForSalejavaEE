@@ -1,9 +1,9 @@
 package com.example.demoCarsForSale.services.impl;
 
-import com.example.demoCarsForSale.controllers.dto.projection.AdShortInfo;
-import com.example.demoCarsForSale.controllers.dto.request.AdRequest;
-import com.example.demoCarsForSale.controllers.dto.response.AdDetailedResponse;
-import com.example.demoCarsForSale.controllers.dto.response.AdResponse;
+import com.example.demoCarsForSale.web.dto.projection.AdShortInfo;
+import com.example.demoCarsForSale.web.dto.request.AdRequest;
+import com.example.demoCarsForSale.web.dto.response.AdDetailedResponse;
+import com.example.demoCarsForSale.web.dto.response.AdResponse;
 import com.example.demoCarsForSale.dao.AdDao;
 import com.example.demoCarsForSale.dao.PicDao;
 import com.example.demoCarsForSale.dao.UserDao;

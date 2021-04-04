@@ -1,6 +1,6 @@
 package com.example.demoCarsForSale.dao.impl;
 
-import com.example.demoCarsForSale.controllers.dto.projection.UserExtraInfo;
+import com.example.demoCarsForSale.web.dto.projection.UserExtraInfo;
 import com.example.demoCarsForSale.dao.UserDao;
 import com.example.demoCarsForSale.dao.db.EntityManagerFactoryProvider;
 import com.example.demoCarsForSale.dao.model.User;
@@ -37,7 +37,7 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
     public List<UserExtraInfo> findAllWithExtraInfo() {
         EntityManager entityManager = entityManager();
 
-        return entityManager.createQuery("SELECT DISTINCT NEW com.example.demoCarsForSale.controllers.dto.projection.UserExtraInfo" +
+        return entityManager.createQuery("SELECT DISTINCT NEW com.example.demoCarsForSale.web.dto.projection.UserExtraInfo" +
             "(user.name, user.email, ad.size)" +
             " FROM User user " +
             " LEFT JOIN user.ads ad", UserExtraInfo.class)

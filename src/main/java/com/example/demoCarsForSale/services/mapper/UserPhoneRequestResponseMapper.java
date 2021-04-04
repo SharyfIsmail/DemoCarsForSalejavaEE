@@ -1,7 +1,7 @@
 package com.example.demoCarsForSale.services.mapper;
 
-import com.example.demoCarsForSale.controllers.dto.request.PhoneRequest;
-import com.example.demoCarsForSale.controllers.dto.response.PhoneResponse;
+import com.example.demoCarsForSale.web.dto.request.PhoneRequest;
+import com.example.demoCarsForSale.web.dto.response.PhoneResponse;
 import com.example.demoCarsForSale.dao.model.UserPhone;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

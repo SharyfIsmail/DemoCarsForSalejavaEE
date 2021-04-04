@@ -1,6 +1,6 @@
 package com.example.demoCarsForSale.dao;
 
-import com.example.demoCarsForSale.controllers.dto.projection.AdShortInfo;
+import com.example.demoCarsForSale.web.dto.projection.AdShortInfo;
 import com.example.demoCarsForSale.dao.model.Ad;
 import com.example.demoCarsForSale.dao.model.Pic;
 

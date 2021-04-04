@@ -1,7 +1,7 @@
 package com.example.demoCarsForSale.services.mapper;
 
-import com.example.demoCarsForSale.controllers.dto.projection.AdShortInfo;
-import com.example.demoCarsForSale.controllers.dto.response.AdResponse;
+import com.example.demoCarsForSale.web.dto.projection.AdShortInfo;
+import com.example.demoCarsForSale.web.dto.response.AdResponse;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

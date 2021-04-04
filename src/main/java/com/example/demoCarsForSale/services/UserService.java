@@ -1,10 +1,10 @@
 package com.example.demoCarsForSale.services;
 
-import com.example.demoCarsForSale.controllers.dto.request.UserLogInRequest;
-import com.example.demoCarsForSale.controllers.dto.request.UserSignUpRequest;
-import com.example.demoCarsForSale.controllers.dto.request.UserUpdateRequest;
-import com.example.demoCarsForSale.controllers.dto.response.UserExtraInfoResponse;
-import com.example.demoCarsForSale.controllers.dto.response.UserResponse;
+import com.example.demoCarsForSale.web.dto.request.UserLogInRequest;
+import com.example.demoCarsForSale.web.dto.request.UserSignUpRequest;
+import com.example.demoCarsForSale.web.dto.request.UserUpdateRequest;
+import com.example.demoCarsForSale.web.dto.response.UserExtraInfoResponse;
+import com.example.demoCarsForSale.web.dto.response.UserResponse;
 import com.example.demoCarsForSale.dao.model.User;
 
 import java.util.List;

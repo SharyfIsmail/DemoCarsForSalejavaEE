@@ -1,6 +1,6 @@
 package com.example.demoCarsForSale.dao.impl;
 
-import com.example.demoCarsForSale.controllers.dto.projection.AdShortInfo;
+import com.example.demoCarsForSale.web.dto.projection.AdShortInfo;
 import com.example.demoCarsForSale.dao.AdDao;
 import com.example.demoCarsForSale.dao.model.Ad;
 import com.example.demoCarsForSale.dao.model.Pic;
@@ -30,7 +30,7 @@ public class AdDaoImpl extends AbstractDao implements AdDao {
     public List<AdShortInfo> getRecords(int start, int total) {
         EntityManager entityManager = entityManager();
 
-        return entityManager.createQuery("SELECT DISTINCT NEW com.example.demoCarsForSale.controllers.dto.projection.AdShortInfo(" +
+        return entityManager.createQuery("SELECT DISTINCT NEW com.example.demoCarsForSale.web.dto.projection.AdShortInfo(" +
             " ad.id," +
             " ad.year," +
             " ad.brand," +
