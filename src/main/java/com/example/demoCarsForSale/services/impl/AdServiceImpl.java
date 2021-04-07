@@ -21,6 +21,8 @@ import com.example.demoCarsForSale.web.dto.response.AdDetailedResponse;
 import com.example.demoCarsForSale.web.dto.response.AdResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -32,6 +34,7 @@ public class AdServiceImpl implements AdService {
     private final PicDao picDao;
     private final UserPhoneDao userPhoneDao;
 
+    @Transactional()
     @Override
     public AdDetailedResponse createAd(AdRequest model, long userId) {
         List<UserPhone> phones = UserPhoneRequestResponseMapper.toUserPhones(model.getPhones());
@@ -55,6 +58,7 @@ public class AdServiceImpl implements AdService {
         return adDetailedResponse;
     }
 
+    @Transactional
     @Override
     public AdDetailedResponse getDetailedInfoAboutAd(long id) {
         User user;
@@ -73,6 +77,7 @@ public class AdServiceImpl implements AdService {
         return adDetailedResponse;
     }
 
+    @Transactional
     @Override
     public void deleteAd(long adId, long userId) {
         Ad adToDelete = adDao.existsById(adId) ?
@@ -86,6 +91,7 @@ public class AdServiceImpl implements AdService {
         }
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS)
     @Override
     public List<AdResponse> getRecords(int start, int total) {
         List<AdShortInfo> adShortInfos = adDao.getRecords(start, total);

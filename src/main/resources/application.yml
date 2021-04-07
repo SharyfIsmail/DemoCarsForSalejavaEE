@@ -8,3 +8,22 @@ logging:
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
   file:
     name: C:/Users/user/Desktop/myLog.log
+
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+     ddl-auto: validate
+    properties:
+      hibernate.cache.use_query_cache: false
+      hibernate.cache.use_second_level_cache: false
+      hibernate.cache.use_structured_entries: false
+      hibernate.cache.use_minimal_puts: false
+    database: postgresql
+    open-in-view: true
+  datasource:
+    hikari:
+      username: postgres
+      password: admin
+    url: jdbc:postgresql://localhost:5422/postgres
+

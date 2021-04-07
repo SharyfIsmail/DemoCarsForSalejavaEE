@@ -7,6 +7,7 @@ import com.example.demoCarsForSale.exceptions.ForbiddenActionException;
 import com.example.demoCarsForSale.services.PicService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("picService")
 @RequiredArgsConstructor
@@ -14,6 +15,7 @@ public class PicServiceImpl implements PicService {
     private final PicDao picDao;
     private final AdDao adDao;
 
+    @Transactional
     @Override
     public void delete(long id, long userId) {
         Pic picToDelete = picDao.existsById(id) ?

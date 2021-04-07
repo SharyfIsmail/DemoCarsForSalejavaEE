@@ -20,6 +20,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -33,6 +35,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return new BCryptPasswordEncoder();
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     @Override
     public List<UserResponse> findAll() {
         List<User> users = userDao.findAll();
@@ -40,6 +43,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return UserResponseRequestMapper.toResponses(users);
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     @Override
     public List<UserExtraInfoResponse> findUsersExtraInfo() {
         List<UserExtraInfo> userExtraInfos = userDao.findAllWithExtraInfo();
@@ -47,6 +51,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return UserResponseRequestMapper.toExtrInfoResponses(userExtraInfos);
     }
 
+    @Transactional
     @Override
     public void delete(long id) {
         try {
@@ -56,6 +61,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     @Override
     public UserResponse logIn(UserLogInRequest userLogInRequest) {
         String email = userLogInRequest.getUserEmail();
@@ -74,6 +80,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return UserResponseRequestMapper.toResponse(userEntity);
     }
 
+    @Transactional
     @Override
     public UserResponse createUser(UserSignUpRequest userSignUpRequest) {
         userSignUpRequest.setUserPassword(passwordEncoder().encode(userSignUpRequest.getUserPassword()));
@@ -88,6 +95,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return UserResponseRequestMapper.toResponse(userEntity);
     }
 
+    @Transactional
     @Override
     public void updateUser(UserUpdateRequest userUpdateRequest, long userId) {
         if (checkNewPassword(userUpdateRequest)) {
@@ -106,6 +114,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         toUpdate.setPassword(requestUpdate.getUserPassword1());
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String email) {
         return userDao.findByEmail(email);
