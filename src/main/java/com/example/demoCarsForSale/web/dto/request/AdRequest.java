@@ -23,7 +23,7 @@ public class AdRequest {
     private Integer engineCapacity;
     @NotNull(message = "Mileage is required")
     private Integer mileAge;
-    @NotBlank(message = "Condition is required")
+    @NotNull(message = "Condition is required")
     private Condition condition;
     @NotNull(message = "Mileage is required")
     private Integer power;

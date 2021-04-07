@@ -34,7 +34,7 @@ public class AdServiceImpl implements AdService {
     private final PicDao picDao;
     private final UserPhoneDao userPhoneDao;
 
-    @Transactional()
+    @Transactional
     @Override
     public AdDetailedResponse createAd(AdRequest model, long userId) {
         List<UserPhone> phones = UserPhoneRequestResponseMapper.toUserPhones(model.getPhones());
@@ -45,10 +45,10 @@ public class AdServiceImpl implements AdService {
         ad.setUser(user);
         Ad createdAd = adDao.save(ad);
 
-        pics.forEach(x -> x.setAd(createdAd));
+        pics.forEach(pic -> pic.setAd(createdAd));
         picDao.savePics(pics);
 
-        phones.forEach(x -> x.setUser(user));
+        phones.forEach(phone -> phone.setUser(user));
         userPhoneDao.savePhones(phones);
 
         AdDetailedResponse adDetailedResponse = AdResponseRequestMapper.toDetailedResponse(ad);
@@ -63,6 +63,7 @@ public class AdServiceImpl implements AdService {
     public AdDetailedResponse getDetailedInfoAboutAd(long id) {
         User user;
         Ad ad;
+
         if (adDao.existsById(id)) {
             ad = adDao.getDetailedInfoAboutAd(id);
             user = userDao.findUserWithPhones(ad.getUser().getUserId());

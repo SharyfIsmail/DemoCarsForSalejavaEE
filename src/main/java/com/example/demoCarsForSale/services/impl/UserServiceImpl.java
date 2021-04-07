@@ -1,7 +1,6 @@
 package com.example.demoCarsForSale.services.impl;
 
 import com.example.demoCarsForSale.dao.UserDao;
-import com.example.demoCarsForSale.dao.db.EntityManagerFactoryProvider;
 import com.example.demoCarsForSale.dao.model.User;
 import com.example.demoCarsForSale.exceptions.BadRequestException;
 import com.example.demoCarsForSale.exceptions.EntityNotFoundException;
@@ -85,12 +84,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserResponse createUser(UserSignUpRequest userSignUpRequest) {
         userSignUpRequest.setUserPassword(passwordEncoder().encode(userSignUpRequest.getUserPassword()));
 
-        EntityManagerFactoryProvider.getEntityManager().getTransaction().begin();
+//        getEntityManager().getTransaction().begin();
         User userEntity = userDao.save(UserResponseRequestMapper
             .toUser(userSignUpRequest));
 
-        EntityManagerFactoryProvider.getEntityManager().getTransaction().commit();
-        EntityManagerFactoryProvider.clear();
+//        getEntityManager().getTransaction().commit();
+//        EntityManagerFactoryProvider.clear();
 
         return UserResponseRequestMapper.toResponse(userEntity);
     }

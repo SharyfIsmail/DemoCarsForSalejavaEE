@@ -1,7 +1,6 @@
 package com.example.demoCarsForSale.dao.impl;
 
 import com.example.demoCarsForSale.dao.UserDao;
-import com.example.demoCarsForSale.dao.db.EntityManagerFactoryProvider;
 import com.example.demoCarsForSale.dao.model.User;
 import com.example.demoCarsForSale.web.dto.projection.UserExtraInfo;
 import org.springframework.stereotype.Repository;
@@ -10,11 +9,11 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository("userDao")
-public class UserDaoImpl extends AbstractDao implements UserDao {
+public class UserDaoImpl extends AbstractDao<User> implements UserDao {
 
     @Override
     public User findByEmail(String email) {
-        return entityManager()
+        return getEntityManager()
             .createQuery("SELECT user FROM User user where user.email = :email", getClassType())
             .setParameter("email", email)
             .getSingleResult();
@@ -22,7 +21,7 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
 
     @Override
     public boolean existsByEmail(String email) {
-        EntityManager entityManager = EntityManagerFactoryProvider.getEntityManager();
+        EntityManager entityManager = getEntityManager();
 
         if (email == null) {
             return false;
@@ -37,9 +36,7 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
 
     @Override
     public List<UserExtraInfo> findAllWithExtraInfo() {
-        EntityManager entityManager = entityManager();
-
-        return entityManager.createQuery("SELECT DISTINCT NEW com.example.demoCarsForSale.web.dto.projection.UserExtraInfo" +
+        return getEntityManager().createQuery("SELECT DISTINCT NEW com.example.demoCarsForSale.web.dto.projection.UserExtraInfo" +
             "(user.name, user.email, ad.size)" +
             " FROM User user " +
             " LEFT JOIN user.ads ad", UserExtraInfo.class)
@@ -48,10 +45,10 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
 
     @Override
     public User findUserWithPhones(long id) {
-        EntityManager entityManager = entityManager();
+        EntityManager entityManager = getEntityManager();
 
         return entityManager.createQuery("SELECT user FROM User user" +
-            " LEFT JOIN FETCH user.userPhones WHERE user.id =:id", User.class)
+            " LEFT JOIN FETCH user.userPhones WHERE user.userId =:id", User.class)
             .setParameter("id", id)
             .getSingleResult();
     }

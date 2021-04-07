@@ -8,11 +8,11 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository("userPhoneDao")
-public class UserPhoneDaoImpl extends AbstractDao implements UserPhoneDao {
+public class UserPhoneDaoImpl extends AbstractDao<UserPhone> implements UserPhoneDao {
 
     @Override
     public List<UserPhone> savePhones(List<UserPhone> userPhones) {
-        EntityManager entityManager = entityManager();
+        EntityManager entityManager =getEntityManager();
         userPhones.forEach(entityManager::persist);
 
         return userPhones;

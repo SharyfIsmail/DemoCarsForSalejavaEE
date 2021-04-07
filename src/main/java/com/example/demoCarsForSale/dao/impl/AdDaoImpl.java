@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository("adDao")
-public class AdDaoImpl extends AbstractDao implements AdDao {
+public class AdDaoImpl extends AbstractDao<Ad> implements AdDao {
 
     @Override
     public void deletePicFromAd(Pic pic) {
-        EntityManager entityManager = entityManager();
+        EntityManager entityManager = getEntityManager();
         long adId = pic.getAd().getAdId();
 
         Ad ad = entityManager.createQuery("SELECT ad FROM Ad ad" +
@@ -30,7 +30,7 @@ public class AdDaoImpl extends AbstractDao implements AdDao {
 
     @Override
     public List<AdShortInfo> getRecords(int start, int total) {
-        EntityManager entityManager = entityManager();
+        EntityManager entityManager =getEntityManager();
 
         return entityManager.createQuery("SELECT DISTINCT NEW com.example.demoCarsForSale.web.dto.projection.AdShortInfo(" +
             " ad.id," +
@@ -50,7 +50,7 @@ public class AdDaoImpl extends AbstractDao implements AdDao {
     }
 
     public Ad getDetailedInfoAboutAd(long id) {
-        EntityManager entityManager = entityManager();
+        EntityManager entityManager =getEntityManager();
 
         return entityManager.createQuery("SELECT ad FROM Ad ad" +
             " LEFT JOIN FETCH ad.pics" +

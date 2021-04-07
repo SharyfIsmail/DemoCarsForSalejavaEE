@@ -8,11 +8,11 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository("picDao")
-public class PicDaoImpl extends AbstractDao implements PicDao {
+public class PicDaoImpl extends AbstractDao<Pic> implements PicDao {
 
     @Override
     public List<Pic> savePics(List<Pic> pics) {
-        EntityManager entityManager = entityManager();
+        EntityManager entityManager = getEntityManager();
         pics.forEach(entityManager::persist);
 
         return pics;
@@ -20,11 +20,11 @@ public class PicDaoImpl extends AbstractDao implements PicDao {
 
     @Override
     public Pic getByIdWithAd(long id) {
-        EntityManager entityManager = entityManager();
+        EntityManager entityManager = getEntityManager();
 
         return entityManager.createQuery("SELECT pic FROM Pic pic" +
             " LEFT JOIN FETCH  pic.ad" +
-            " WHERE pic.id =:id", Pic.class)
+            " WHERE pic.picId =:id", Pic.class)
             .setParameter("id", id)
             .getSingleResult();
     }

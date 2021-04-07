@@ -1,13 +1,18 @@
 package com.example.demoCarsForSale.dao.impl;
 
-import com.example.demoCarsForSale.dao.db.EntityManagerFactoryProvider;
+import com.example.demoCarsForSale.dao.Dao;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 
-public abstract class AbstractDao {
+public abstract class AbstractDao<T> implements Dao<T> {
 
-    protected static EntityManager entityManager() {
-        return EntityManagerFactoryProvider.getEntityManager();
+    @Autowired
+    private EntityManager entityManager;
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
     }
 }
 

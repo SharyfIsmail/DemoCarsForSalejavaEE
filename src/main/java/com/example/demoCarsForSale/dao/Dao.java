@@ -5,10 +5,10 @@ import com.example.demoCarsForSale.exceptions.EntityNotFoundException;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static com.example.demoCarsForSale.dao.db.EntityManagerFactoryProvider.getEntityManager;
-
-@FunctionalInterface
 public interface Dao<T> {
+
+    EntityManager getEntityManager();
+
     default T save(T model) {
         getEntityManager().persist(model);
         return model;
