@@ -2,31 +2,27 @@ package com.example.demoCarsForSale.services.impl;
 
 import com.example.demoCarsForSale.dao.AdDao;
 import com.example.demoCarsForSale.dao.PicDao;
-import com.example.demoCarsForSale.dao.impl.AdDaoImpl;
-import com.example.demoCarsForSale.dao.impl.PicDaoImpl;
 import com.example.demoCarsForSale.dao.model.Pic;
 import com.example.demoCarsForSale.exceptions.ForbiddenActionException;
 import com.example.demoCarsForSale.services.PicService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
-
-public class PicServiceImpl extends AbstractService implements PicService {
-    private static final PicDao PIC_DAO = new PicDaoImpl();
-    private static final AdDao AD_DAO = new AdDaoImpl();
+@Service("picService")
+@RequiredArgsConstructor
+public class PicServiceImpl implements PicService {
+    private final PicDao picDao;
+    private final AdDao adDao;
 
     @Override
     public void delete(long id, long userId) {
-        startTransaction();
-        Pic picToDelete = PIC_DAO.existsById(id) ?
-            PIC_DAO.getByIdWithAd(id) : null;
+        Pic picToDelete = picDao.existsById(id) ?
+            picDao.getByIdWithAd(id) : null;
 
         if (picToDelete != null && isAbleToDelete(userId, picToDelete.getAd().getUser().getUserId())) {
-            AD_DAO.deletePicFromAd(picToDelete);
-
-            closeTransaction();
+            adDao.deletePicFromAd(picToDelete);
         } else {
-            rollback();
-            throw new ForbiddenActionException("Permission denied", HttpServletResponse.SC_FORBIDDEN);
+            throw new ForbiddenActionException("Permission denied");
         }
     }
 }

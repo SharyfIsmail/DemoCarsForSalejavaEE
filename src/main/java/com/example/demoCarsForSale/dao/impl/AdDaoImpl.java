@@ -1,14 +1,16 @@
 package com.example.demoCarsForSale.dao.impl;
 
-import com.example.demoCarsForSale.web.dto.projection.AdShortInfo;
 import com.example.demoCarsForSale.dao.AdDao;
 import com.example.demoCarsForSale.dao.model.Ad;
 import com.example.demoCarsForSale.dao.model.Pic;
+import com.example.demoCarsForSale.web.dto.projection.AdShortInfo;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Repository("adDao")
 public class AdDaoImpl extends AbstractDao implements AdDao {
 
     @Override

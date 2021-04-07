@@ -5,19 +5,30 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @NoArgsConstructor
 @Getter
 @Setter
 public class AdRequest {
-    private int year;
+    @NotNull(message = "Year is required")
+    private Integer year;
+    @NotBlank(message = "need to define the car's brand")
     private String brand;
+    @NotBlank(message = "need to define the car's model")
     private String model;
-    private int engineCapacity;
-    private int mileAge;
+    @NotNull(message = "Engine capacity is required")
+    private Integer engineCapacity;
+    @NotNull(message = "Mileage is required")
+    private Integer mileAge;
+    @NotBlank(message = "Condition is required")
     private Condition condition;
-    private int power;
+    @NotNull(message = "Mileage is required")
+    private Integer power;
+    @NotNull(message = "please upload at least one picture")
     private List<PicRequest> pics;
+    @NotNull(message = "please type at least one phone number")
     private List<PhoneRequest> phones;
 }

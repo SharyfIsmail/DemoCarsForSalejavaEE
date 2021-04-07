@@ -1,11 +1,11 @@
 package com.example.demoCarsForSale.services;
 
+import com.example.demoCarsForSale.dao.model.User;
 import com.example.demoCarsForSale.web.dto.request.UserLogInRequest;
 import com.example.demoCarsForSale.web.dto.request.UserSignUpRequest;
 import com.example.demoCarsForSale.web.dto.request.UserUpdateRequest;
 import com.example.demoCarsForSale.web.dto.response.UserExtraInfoResponse;
 import com.example.demoCarsForSale.web.dto.response.UserResponse;
-import com.example.demoCarsForSale.dao.model.User;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public interface UserService {
 
     List<UserResponse> findAll();
 
-    List<UserExtraInfoResponse> findUserExtraInfo();
+    List<UserExtraInfoResponse> findUsersExtraInfo();
 
     void delete(long id);
 

@@ -1,17 +1,9 @@
 package com.example.demoCarsForSale.services.impl;
 
-import com.example.demoCarsForSale.web.dto.projection.AdShortInfo;
-import com.example.demoCarsForSale.web.dto.request.AdRequest;
-import com.example.demoCarsForSale.web.dto.response.AdDetailedResponse;
-import com.example.demoCarsForSale.web.dto.response.AdResponse;
 import com.example.demoCarsForSale.dao.AdDao;
 import com.example.demoCarsForSale.dao.PicDao;
 import com.example.demoCarsForSale.dao.UserDao;
 import com.example.demoCarsForSale.dao.UserPhoneDao;
-import com.example.demoCarsForSale.dao.impl.AdDaoImpl;
-import com.example.demoCarsForSale.dao.impl.PicDaoImpl;
-import com.example.demoCarsForSale.dao.impl.UserDaoImpl;
-import com.example.demoCarsForSale.dao.impl.UserPhoneDaoImpl;
 import com.example.demoCarsForSale.dao.model.Ad;
 import com.example.demoCarsForSale.dao.model.Pic;
 import com.example.demoCarsForSale.dao.model.User;
@@ -23,15 +15,22 @@ import com.example.demoCarsForSale.services.mapper.AdResponseRequestMapper;
 import com.example.demoCarsForSale.services.mapper.PaginationMapper;
 import com.example.demoCarsForSale.services.mapper.PicRequestResponseMapper;
 import com.example.demoCarsForSale.services.mapper.UserPhoneRequestResponseMapper;
+import com.example.demoCarsForSale.web.dto.projection.AdShortInfo;
+import com.example.demoCarsForSale.web.dto.request.AdRequest;
+import com.example.demoCarsForSale.web.dto.response.AdDetailedResponse;
+import com.example.demoCarsForSale.web.dto.response.AdResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-public class AdServiceImpl extends AbstractService implements AdService {
-    private static final UserDao USER_DAO = new UserDaoImpl();
-    private static final AdDao AD_DAO = new AdDaoImpl();
-    private static final PicDao PIC_DAO = new PicDaoImpl();
-    private static final UserPhoneDao USER_PHONE = new UserPhoneDaoImpl();
+@Service("adService")
+@RequiredArgsConstructor
+public class AdServiceImpl implements AdService {
+    private final UserDao userDao;
+    private final AdDao adDao;
+    private final PicDao picDao;
+    private final UserPhoneDao userPhoneDao;
 
     @Override
     public AdDetailedResponse createAd(AdRequest model, long userId) {
@@ -39,24 +38,15 @@ public class AdServiceImpl extends AbstractService implements AdService {
         List<Pic> pics = PicRequestResponseMapper.toPics(model.getPics());
         Ad ad = AdResponseRequestMapper.toAd(model);
 
-        try {
-            startTransaction();
+        User user = userDao.findById(userId);
+        ad.setUser(user);
+        Ad createdAd = adDao.save(ad);
 
-            User user = USER_DAO.findById(userId);
-            ad.setUser(user);
-            Ad createdAd = AD_DAO.save(ad);
+        pics.forEach(x -> x.setAd(createdAd));
+        picDao.savePics(pics);
 
-            pics.forEach(x -> x.setAd(createdAd));
-            PIC_DAO.savePics(pics);
-
-            phones.forEach(x -> x.setUser(user));
-            USER_PHONE.savePhones(phones);
-
-            closeTransaction();
-        } catch (Exception e) {
-            rollback();
-            throw new BadRequestException("Make sure to type all required fields", e, HttpServletResponse.SC_BAD_REQUEST);
-        }
+        phones.forEach(x -> x.setUser(user));
+        userPhoneDao.savePhones(phones);
 
         AdDetailedResponse adDetailedResponse = AdResponseRequestMapper.toDetailedResponse(ad);
         adDetailedResponse.setPics(PicRequestResponseMapper.toResponses(pics));
@@ -67,18 +57,13 @@ public class AdServiceImpl extends AbstractService implements AdService {
 
     @Override
     public AdDetailedResponse getDetailedInfoAboutAd(long id) {
-        startTransaction();
-
         User user;
         Ad ad;
-        if (AD_DAO.existsById(id)) {
-            ad = AD_DAO.getDetailedInfoAboutAd(id);
-            user = USER_DAO.findUserWithPhones(ad.getUser().getUserId());
-
-            closeTransaction();
+        if (adDao.existsById(id)) {
+            ad = adDao.getDetailedInfoAboutAd(id);
+            user = userDao.findUserWithPhones(ad.getUser().getUserId());
         } else {
-            rollback();
-            throw new EntityNotFoundException("Ad not found", HttpServletResponse.SC_NOT_FOUND);
+            throw new EntityNotFoundException("Ad not found");
         }
 
         AdDetailedResponse adDetailedResponse = AdResponseRequestMapper.toDetailedResponse(ad);
@@ -90,26 +75,20 @@ public class AdServiceImpl extends AbstractService implements AdService {
 
     @Override
     public void deleteAd(long adId, long userId) {
-        startTransaction();
-
-        Ad adToDelete = AD_DAO.existsById(adId) ?
-            AD_DAO.getDetailedInfoAboutAd(adId) :
+        Ad adToDelete = adDao.existsById(adId) ?
+            adDao.getDetailedInfoAboutAd(adId) :
             null;
 
         if (adToDelete != null && isAbleToDelete(adToDelete.getUser().getUserId(), userId)) {
-            AD_DAO.delete(adId);
-            closeTransaction();
+            adDao.delete(adId);
         } else {
-            rollback();
-            throw new BadRequestException("Permission denied", HttpServletResponse.SC_FORBIDDEN);
+            throw new BadRequestException("Permission denied");
         }
     }
 
     @Override
     public List<AdResponse> getRecords(int start, int total) {
-        startTransaction();
-        List<AdShortInfo> adShortInfos = AD_DAO.getRecords(start, total);
-        closeTransaction();
+        List<AdShortInfo> adShortInfos = adDao.getRecords(start, total);
 
         return PaginationMapper.toResponses(adShortInfos);
     }

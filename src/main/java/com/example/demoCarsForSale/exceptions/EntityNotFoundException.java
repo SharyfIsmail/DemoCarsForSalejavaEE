@@ -1,11 +1,14 @@
 package com.example.demoCarsForSale.exceptions;
 
-public class EntityNotFoundException extends AbstractThrowableException {
-    public EntityNotFoundException(String message, int errorStatus) {
-        super(message, errorStatus);
+import org.springframework.http.HttpStatus;
+
+public class EntityNotFoundException extends ApiBaseException {
+    public EntityNotFoundException(String message) {
+        super(message);
     }
 
-    public EntityNotFoundException(String message, Throwable e, int errorStatus) {
-        super(message, e, errorStatus);
+    @Override
+    public HttpStatus getHttpStatus() {
+        return HttpStatus.NOT_FOUND;
     }
 }

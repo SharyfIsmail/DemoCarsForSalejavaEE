@@ -1,13 +1,15 @@
 package com.example.demoCarsForSale.dao.impl;
 
-import com.example.demoCarsForSale.web.dto.projection.UserExtraInfo;
 import com.example.demoCarsForSale.dao.UserDao;
 import com.example.demoCarsForSale.dao.db.EntityManagerFactoryProvider;
 import com.example.demoCarsForSale.dao.model.User;
+import com.example.demoCarsForSale.web.dto.projection.UserExtraInfo;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
+@Repository("userDao")
 public class UserDaoImpl extends AbstractDao implements UserDao {
 
     @Override

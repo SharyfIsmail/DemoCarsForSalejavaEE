@@ -1,38 +1,48 @@
 package com.example.demoCarsForSale.services.impl;
 
+import com.example.demoCarsForSale.dao.UserDao;
+import com.example.demoCarsForSale.dao.db.EntityManagerFactoryProvider;
+import com.example.demoCarsForSale.dao.model.User;
+import com.example.demoCarsForSale.exceptions.BadRequestException;
+import com.example.demoCarsForSale.exceptions.EntityNotFoundException;
+import com.example.demoCarsForSale.services.UserService;
+import com.example.demoCarsForSale.services.mapper.UserResponseRequestMapper;
 import com.example.demoCarsForSale.web.dto.projection.UserExtraInfo;
 import com.example.demoCarsForSale.web.dto.request.UserLogInRequest;
 import com.example.demoCarsForSale.web.dto.request.UserSignUpRequest;
 import com.example.demoCarsForSale.web.dto.request.UserUpdateRequest;
 import com.example.demoCarsForSale.web.dto.response.UserExtraInfoResponse;
 import com.example.demoCarsForSale.web.dto.response.UserResponse;
-import com.example.demoCarsForSale.dao.UserDao;
-import com.example.demoCarsForSale.dao.impl.UserDaoImpl;
-import com.example.demoCarsForSale.dao.model.User;
-import com.example.demoCarsForSale.exceptions.BadRequestException;
-import com.example.demoCarsForSale.exceptions.EntityNotFoundException;
-import com.example.demoCarsForSale.services.mapper.UserResponseRequestMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-public final class UserServiceImpl extends AbstractService implements com.example.demoCarsForSale.services.UserService {
-    private static final UserDao USER = new UserDaoImpl();
+@Service("userService")
+@RequiredArgsConstructor
+public class UserServiceImpl implements UserService, UserDetailsService {
+    private final UserDao userDao;
+
+    @Bean
+    private PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Override
     public List<UserResponse> findAll() {
-        startTransaction();
-        List<User> users = USER.findAll();
-        closeTransaction();
+        List<User> users = userDao.findAll();
 
         return UserResponseRequestMapper.toResponses(users);
     }
 
     @Override
-    public List<UserExtraInfoResponse> findUserExtraInfo() {
-        startTransaction();
-        List<UserExtraInfo> userExtraInfos = USER.findAllWithExtraInfo();
-        closeTransaction();
+    public List<UserExtraInfoResponse> findUsersExtraInfo() {
+        List<UserExtraInfo> userExtraInfos = userDao.findAllWithExtraInfo();
 
         return UserResponseRequestMapper.toExtrInfoResponses(userExtraInfos);
     }
@@ -40,32 +50,25 @@ public final class UserServiceImpl extends AbstractService implements com.exampl
     @Override
     public void delete(long id) {
         try {
-            startTransaction();
-            USER.delete(id);
-            closeTransaction();
+            userDao.delete(id);
         } catch (Exception e) {
-            rollback();
-
-            throw new BadRequestException("Couldn't not delete user", e, HttpServletResponse.SC_BAD_REQUEST);
+            throw new BadRequestException("Couldn't not delete user");
         }
     }
 
     @Override
     public UserResponse logIn(UserLogInRequest userLogInRequest) {
         String email = userLogInRequest.getUserEmail();
-
-        startTransaction();
         User userEntity;
-        if (USER.existsByEmail(email)) {
-            userEntity = USER.findByEmail(email);
-            closeTransaction();
+
+        if (userDao.existsByEmail(email)) {
+            userEntity = userDao.findByEmail(email);
 
             if (!checkAuth(userLogInRequest, userEntity)) {
-                throw new BadRequestException("Incorrect password", HttpServletResponse.SC_BAD_REQUEST);
+                throw new BadRequestException("Incorrect password");
             }
         } else {
-            rollback();
-            throw new EntityNotFoundException("Wrong email", HttpServletResponse.SC_NOT_FOUND);
+            throw new EntityNotFoundException("Wrong email");
         }
 
         return UserResponseRequestMapper.toResponse(userEntity);
@@ -73,40 +76,27 @@ public final class UserServiceImpl extends AbstractService implements com.exampl
 
     @Override
     public UserResponse createUser(UserSignUpRequest userSignUpRequest) {
-        User userEntity;
+        userSignUpRequest.setUserPassword(passwordEncoder().encode(userSignUpRequest.getUserPassword()));
 
-        try {
-            startTransaction();
-            userEntity = USER.save(UserResponseRequestMapper
-                .toUser(userSignUpRequest));
+        EntityManagerFactoryProvider.getEntityManager().getTransaction().begin();
+        User userEntity = userDao.save(UserResponseRequestMapper
+            .toUser(userSignUpRequest));
 
-            closeTransaction();
-        } catch (RuntimeException e) {
-            rollback();
-
-            throw new BadRequestException("Please type your name, email and your password to sign up", e,
-                HttpServletResponse.SC_BAD_REQUEST);
-        }
+        EntityManagerFactoryProvider.getEntityManager().getTransaction().commit();
+        EntityManagerFactoryProvider.clear();
 
         return UserResponseRequestMapper.toResponse(userEntity);
     }
 
     @Override
     public void updateUser(UserUpdateRequest userUpdateRequest, long userId) {
-        try {
-            if (checkNewPassword(userUpdateRequest)) {
-                startTransaction();
+        if (checkNewPassword(userUpdateRequest)) {
 
-                User user = USER.findById(userId);
-                setFieldsToUpdate(userUpdateRequest, user);
-                USER.update(user);
-                closeTransaction();
-            } else {
-                throw new BadRequestException("Passwords don't match", HttpServletResponse.SC_BAD_REQUEST);
-            }
-        } catch (Exception e) {
-            rollback();
-            throw new BadRequestException("Need to set all the data to update", e, HttpServletResponse.SC_BAD_REQUEST);
+            User user = userDao.findById(userId);
+            setFieldsToUpdate(userUpdateRequest, user);
+            userDao.update(user);
+        } else {
+            throw new BadRequestException("Passwords don't match");
         }
     }
 
@@ -115,5 +105,9 @@ public final class UserServiceImpl extends AbstractService implements com.exampl
         toUpdate.setName(requestUpdate.getUserName());
         toUpdate.setPassword(requestUpdate.getUserPassword1());
     }
-}
 
+    @Override
+    public UserDetails loadUserByUsername(String email) {
+        return userDao.findByEmail(email);
+    }
+}

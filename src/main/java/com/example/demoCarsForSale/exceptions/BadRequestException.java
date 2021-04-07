@@ -1,11 +1,15 @@
 package com.example.demoCarsForSale.exceptions;
 
-public class BadRequestException extends AbstractThrowableException {
-    public BadRequestException(String message, Throwable e, int errorStatus) {
-        super(message, e, errorStatus);
+import org.springframework.http.HttpStatus;
+
+public class BadRequestException extends ApiBaseException {
+
+    public BadRequestException(String message) {
+        super(message);
     }
 
-    public BadRequestException(String message, int errorStatus) {
-        super(message, errorStatus);
+    @Override
+    public HttpStatus getHttpStatus() {
+        return HttpStatus.BAD_REQUEST;
     }
 }

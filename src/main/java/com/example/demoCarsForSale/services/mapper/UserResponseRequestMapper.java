@@ -1,10 +1,10 @@
 package com.example.demoCarsForSale.services.mapper;
 
+import com.example.demoCarsForSale.dao.model.User;
+import com.example.demoCarsForSale.web.dto.projection.UserExtraInfo;
 import com.example.demoCarsForSale.web.dto.request.UserSignUpRequest;
 import com.example.demoCarsForSale.web.dto.response.UserExtraInfoResponse;
 import com.example.demoCarsForSale.web.dto.response.UserResponse;
-import com.example.demoCarsForSale.dao.model.User;
-import com.example.demoCarsForSale.web.dto.projection.UserExtraInfo;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

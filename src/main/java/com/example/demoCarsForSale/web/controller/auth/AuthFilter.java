@@ -1,35 +1,55 @@
 package com.example.demoCarsForSale.web.controller.auth;
 
-import com.example.demoCarsForSale.web.dto.response.UserResponse;
+import com.example.demoCarsForSale.dao.model.User;
+import com.example.demoCarsForSale.security.TokenUtil;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 
-@WebFilter(servletNames = {"AdCreatorController",
-    "AdController", "picController", "LogOutController", "UpdateController"})
-public class AuthFilter implements Filter {
+@Component("authFilter")
+@RequiredArgsConstructor
+public class AuthFilter extends OncePerRequestFilter {
+    private static final String BEARER_PREFIX = "Bearer ";
+    private final UserDetailsService userService;
 
     @Override
-    public void doFilter(ServletRequest servletRequest,
-                         ServletResponse servletResponse,
-                         FilterChain filterChain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
 
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        UserResponse userLogInResponse = (UserResponse) request.getSession().getAttribute("user");
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (userLogInResponse != null) {
-            filterChain.doFilter(request, response);
-        } else {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("You first need to log in or sign up");
+        if (StringUtils.isNotEmpty(header) && header.startsWith(BEARER_PREFIX)) {
+            String token = header.substring(BEARER_PREFIX.length());
+            String email = TokenUtil.getEmailFromToken(token);
+
+            if (email != null) {
+                User user = (User) userService.loadUserByUsername(email);
+
+                if (TokenUtil.isTokenValid(token, user)) {
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user,
+                        null,
+                        Collections.unmodifiableList(AuthorityUtils.NO_AUTHORITIES));
+
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+            }
         }
+        filterChain.doFilter(request, response);
     }
 }

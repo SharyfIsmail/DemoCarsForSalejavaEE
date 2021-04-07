@@ -1,50 +1,55 @@
 package com.example.demoCarsForSale.web.controller;
 
 import com.example.demoCarsForSale.services.AdService;
-import com.example.demoCarsForSale.services.impl.AdServiceImpl;
+import com.example.demoCarsForSale.web.SecurityContextPrincipalSupplier;
 import com.example.demoCarsForSale.web.dto.request.AdRequest;
 import com.example.demoCarsForSale.web.dto.response.AdDetailedResponse;
-import com.example.demoCarsForSale.web.dto.response.UserResponse;
-import com.example.demoCarsForSale.web.utils.UriUtil;
+import com.example.demoCarsForSale.web.dto.response.AdResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/ads")
-public class AdController extends BaseController {
-    private static final AdService AD = new AdServiceImpl();
+@RequiredArgsConstructor
+public class AdController extends SecurityContextPrincipalSupplier {
+    private static final String DEFAULT_PAGE = "1";
+    private static final String DEFAULT_RECORDS_TO_SHOW = "10";
+    private final AdService adService;
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<AdDetailedResponse> getAd(Long id) {
-        AdDetailedResponse ad = AD.getDetailedInfoAboutAd(id);
-        return new ResponseEntity<>(ad, HttpStatus.OK);
+    @GetMapping("/{id}")
+    public ResponseEntity<AdDetailedResponse> read(@PathVariable long id) {
+        return new ResponseEntity<>(adService.getDetailedInfoAboutAd(id), HttpStatus.OK);
     }
 
-    @PostMapping(value = {"", "/"})
-    public ResponseEntity<AdDetailedResponse> createAd(@RequestBody AdRequest adRequest) {
-        AdDetailedResponse ad = AD.
+    @PostMapping(value = {"", "/"}, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AdDetailedResponse> create(@Valid @RequestBody AdRequest adRequest) {
+        return new ResponseEntity<>(adService.createAd(adRequest, getUser().getUserId()), HttpStatus.CREATED);
     }
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
-        executeWithResult(response, () ->
-            AD_HANDLER.getDetailedInfoAboutAd(UriUtil.getIdFromPath(request.getPathInfo())));
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable long id) {
+        adService.deleteAd(id, getUser().getUserId());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) {
-        long id = UriUtil.getIdFromPath(request.getPathInfo());
+    @GetMapping({"", "/"})
+    public ResponseEntity<List<AdResponse>> readAll(
+        @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
+        @RequestParam(value = "size", defaultValue = DEFAULT_RECORDS_TO_SHOW) int size) {
 
-        UserResponse attribute = (UserResponse) request.getSession().getAttribute("user");
-
-        executeWithNoResult(() -> AD_HANDLER.deleteAd(id, attribute.getUserId()));
+        return new ResponseEntity<>(adService.getRecords(page, size), HttpStatus.OK);
     }
 }

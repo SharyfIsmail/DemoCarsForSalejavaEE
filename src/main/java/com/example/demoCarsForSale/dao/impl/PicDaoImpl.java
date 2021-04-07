@@ -2,10 +2,12 @@ package com.example.demoCarsForSale.dao.impl;
 
 import com.example.demoCarsForSale.dao.PicDao;
 import com.example.demoCarsForSale.dao.model.Pic;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
+@Repository("picDao")
 public class PicDaoImpl extends AbstractDao implements PicDao {
 
     @Override

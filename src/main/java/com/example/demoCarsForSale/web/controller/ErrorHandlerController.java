@@ -1,38 +1,38 @@
 package com.example.demoCarsForSale.web.controller;
 
-import com.example.demoCarsForSale.exceptions.AbstractThrowableException;
-import lombok.Builder;
-import lombok.Getter;
-import org.apache.log4j.Logger;
+import com.example.demoCarsForSale.exceptions.ApiBaseException;
+import com.example.demoCarsForSale.web.dto.response.ErrorResponse;
+import com.example.demoCarsForSale.web.dto.response.ValidationErrorResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
-@WebServlet(name = "ServletErrorHandlerController", urlPatterns = "/errorHandler")
-public class ErrorHandlerController extends BaseController {
-    private static final Logger LOG = Logger.getLogger(ErrorHandlerController.class);
+@ControllerAdvice
+public class ErrorHandlerController {
 
-    @Override
-    protected void service(HttpServletRequest request, HttpServletResponse response) {
-        Throwable throwable = (Throwable) request.getAttribute("javax.servlet.error.exception");
-
-        if (throwable instanceof AbstractThrowableException) {
-            response.setStatus(((AbstractThrowableException) throwable).getErrorStatus());
-        }
-
-        executeWithResult(response, () -> ErrorApiResponse.builder()
-            .errorClass(null)
-            .errorMessage(throwable.getMessage())
-            .build());
-
-        LOG.error(throwable.getClass() + ":" + throwable.getMessage());
+    @ExceptionHandler(ApiBaseException.class)
+    public ResponseEntity<ErrorResponse> handleApiException(ApiBaseException exception, WebRequest request) {
+        return new ResponseEntity<>(ErrorResponse.builder()
+            .error(exception.getMessage())
+            .uri(request.getDescription(false))
+            .build(), exception.getHttpStatus());
     }
 
-    @Builder
-    @Getter
-    static class ErrorApiResponse {
-        private final String errorMessage;
-        private final String errorClass;
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, WebRequest request) {
+        ValidationErrorResponse validationError = ValidationErrorResponse.builder().build();
+        validationError.setUri(request.getDescription(false));
+
+        List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
+
+        fieldErrors.forEach(fieldError -> validationError.addError(fieldError.getDefaultMessage()));
+
+        return new ResponseEntity<>(validationError, HttpStatus.BAD_REQUEST);
     }
 }

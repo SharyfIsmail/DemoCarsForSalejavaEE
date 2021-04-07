@@ -3,7 +3,6 @@ package com.example.demoCarsForSale.dao;
 import com.example.demoCarsForSale.exceptions.EntityNotFoundException;
 
 import javax.persistence.EntityManager;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 import static com.example.demoCarsForSale.dao.db.EntityManagerFactoryProvider.getEntityManager;
@@ -19,8 +18,7 @@ public interface Dao<T> {
         T entity = getEntityManager().find(getClassType(), id);
 
         if (entity == null) {
-            getEntityManager().close();
-            throw new EntityNotFoundException("Not found: " + getClassType(), HttpServletResponse.SC_NOT_FOUND);
+            throw new EntityNotFoundException("Not found: " + getClassType());
         }
         return entity;
     }

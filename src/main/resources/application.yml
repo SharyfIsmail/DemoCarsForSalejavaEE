@@ -1,0 +1,10 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    com.example.demoCarsForSale: INFO
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: C:/Users/user/Desktop/myLog.log

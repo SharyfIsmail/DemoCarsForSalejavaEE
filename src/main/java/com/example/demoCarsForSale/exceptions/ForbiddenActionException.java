@@ -1,11 +1,15 @@
 package com.example.demoCarsForSale.exceptions;
 
-public class ForbiddenActionException extends AbstractThrowableException {
-    public ForbiddenActionException(String message, Throwable e, int errorStatus) {
-        super(message, e, errorStatus);
+import org.springframework.http.HttpStatus;
+
+public class ForbiddenActionException extends ApiBaseException {
+
+    public ForbiddenActionException(String message) {
+        super(message);
     }
 
-    public ForbiddenActionException(String message, int errorStatus) {
-        super(message, errorStatus);
+    @Override
+    public HttpStatus getHttpStatus() {
+        return HttpStatus.FORBIDDEN;
     }
 }
