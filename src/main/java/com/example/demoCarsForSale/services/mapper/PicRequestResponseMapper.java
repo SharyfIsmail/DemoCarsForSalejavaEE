@@ -1,8 +1,8 @@
 package com.example.demoCarsForSale.services.mapper;
 
+import com.example.demoCarsForSale.pojo.Pic;
 import com.example.demoCarsForSale.web.dto.request.PicRequest;
 import com.example.demoCarsForSale.web.dto.response.PicResponse;
-import com.example.demoCarsForSale.dao.model.Pic;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

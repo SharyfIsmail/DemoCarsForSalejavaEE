@@ -1,4 +1,4 @@
-package com.example.demoCarsForSale.dao.model;
+package com.example.demoCarsForSale.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

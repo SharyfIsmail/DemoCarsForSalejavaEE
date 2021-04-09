@@ -1,22 +1,26 @@
 package com.example.demoCarsForSale.web.dto.projection;
 
-import com.example.demoCarsForSale.dao.model.Condition;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import com.example.demoCarsForSale.pojo.Condition;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
-@Getter
-@Setter
-public class AdShortInfo {
-    private long adId;
-    private int year;
-    private String brand;
-    private String model;
-    private Condition condition;
-    private String userName;
-    private int picSize;
-    private LocalDateTime createDate;
+public interface AdShortInfo {
+    long getAdId();
+
+    int getYear();
+
+    String getBrand();
+
+    String getModel();
+
+    Condition getCondition();
+
+    @Value("#{target.user.name}")
+    String getUser();
+
+    @Value("#{target.pics.size}")
+    int getPics();
+
+    LocalDateTime getCreateDate();
 }

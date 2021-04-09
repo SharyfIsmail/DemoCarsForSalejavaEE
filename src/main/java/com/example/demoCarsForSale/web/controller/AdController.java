@@ -6,6 +6,8 @@ import com.example.demoCarsForSale.web.dto.request.AdRequest;
 import com.example.demoCarsForSale.web.dto.response.AdDetailedResponse;
 import com.example.demoCarsForSale.web.dto.response.AdResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +52,6 @@ public class AdController extends SecurityContextPrincipalSupplier {
         @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
         @RequestParam(value = "size", defaultValue = DEFAULT_RECORDS_TO_SHOW) int size) {
 
-        return new ResponseEntity<>(adService.getRecords(page, size), HttpStatus.OK);
+        return new ResponseEntity<>(adService.getRecords(PageRequest.of(page, size, Sort.by("createDate"))), HttpStatus.OK);
     }
 }

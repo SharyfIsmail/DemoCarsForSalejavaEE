@@ -1,6 +1,6 @@
 package com.example.demoCarsForSale.web.controller.auth;
 
-import com.example.demoCarsForSale.dao.model.User;
+import com.example.demoCarsForSale.pojo.User;
 import com.example.demoCarsForSale.security.TokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;

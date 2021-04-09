@@ -1,14 +1,12 @@
 package com.example.demoCarsForSale.web.dto.projection;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 
-@AllArgsConstructor
-@Getter
-@Setter
-public class UserExtraInfo {
-    private String name;
-    private String email;
-    private int adCount;
+public interface UserExtraInfo {
+    String getName();
+
+    String getEmail();
+
+    @Value("#{target.ads.size}")
+    int getAds();
 }

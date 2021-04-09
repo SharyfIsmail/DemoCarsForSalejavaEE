@@ -1,6 +1,6 @@
 package com.example.demoCarsForSale.web;
 
-import com.example.demoCarsForSale.dao.model.User;
+import com.example.demoCarsForSale.pojo.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 

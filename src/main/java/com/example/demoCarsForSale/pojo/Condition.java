@@ -1,4 +1,4 @@
-package com.example.demoCarsForSale.dao.model;
+package com.example.demoCarsForSale.pojo;
 
 public enum Condition {
     NEW,

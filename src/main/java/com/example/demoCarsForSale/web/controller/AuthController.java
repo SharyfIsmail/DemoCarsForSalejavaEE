@@ -1,7 +1,7 @@
 package com.example.demoCarsForSale.web.controller;
 
-import com.example.demoCarsForSale.dao.model.User;
 import com.example.demoCarsForSale.exceptions.BadRequestException;
+import com.example.demoCarsForSale.pojo.User;
 import com.example.demoCarsForSale.security.TokenUtil;
 import com.example.demoCarsForSale.services.impl.UserServiceImpl;
 import com.example.demoCarsForSale.web.SecurityContextPrincipalSupplier;
@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,7 +39,7 @@ public class AuthController extends SecurityContextPrincipalSupplier {
             authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userLogInRequest.getUserEmail(),
                     userLogInRequest.getUserPassword()));
-        } catch (AuthenticationException e) {
+        } catch (RuntimeException e) {
             throw new BadRequestException("Wrong email or password");
         }
 

@@ -1,6 +1,6 @@
 package com.example.demoCarsForSale.services.mapper;
 
-import com.example.demoCarsForSale.dao.model.User;
+import com.example.demoCarsForSale.pojo.User;
 import com.example.demoCarsForSale.web.dto.projection.UserExtraInfo;
 import com.example.demoCarsForSale.web.dto.request.UserSignUpRequest;
 import com.example.demoCarsForSale.web.dto.response.UserExtraInfoResponse;
@@ -41,7 +41,7 @@ public final class UserResponseRequestMapper {
                 UserExtraInfoResponse.builder()
                     .userName(x.getName())
                     .email(x.getEmail())
-                    .adCount(x.getAdCount())
+                    .adCount(x.getAds())
                     .build())
             .collect(Collectors.toList());
     }

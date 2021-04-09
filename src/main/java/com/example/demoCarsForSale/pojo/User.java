@@ -1,4 +1,4 @@
-package com.example.demoCarsForSale.dao.model;
+package com.example.demoCarsForSale.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,7 +32,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_ID", nullable = false)
-    private long userId;
+    private Long userId;
 
     @Column(name = "USER_NAME", nullable = false, length = 20)
     private String name;

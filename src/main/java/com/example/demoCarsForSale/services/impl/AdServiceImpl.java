@@ -1,25 +1,25 @@
 package com.example.demoCarsForSale.services.impl;
 
-import com.example.demoCarsForSale.dao.AdDao;
-import com.example.demoCarsForSale.dao.PicDao;
-import com.example.demoCarsForSale.dao.UserDao;
-import com.example.demoCarsForSale.dao.UserPhoneDao;
-import com.example.demoCarsForSale.dao.model.Ad;
-import com.example.demoCarsForSale.dao.model.Pic;
-import com.example.demoCarsForSale.dao.model.User;
-import com.example.demoCarsForSale.dao.model.UserPhone;
 import com.example.demoCarsForSale.exceptions.BadRequestException;
 import com.example.demoCarsForSale.exceptions.EntityNotFoundException;
+import com.example.demoCarsForSale.pojo.Ad;
+import com.example.demoCarsForSale.pojo.Pic;
+import com.example.demoCarsForSale.pojo.User;
+import com.example.demoCarsForSale.pojo.UserPhone;
+import com.example.demoCarsForSale.repository.AdRepository;
+import com.example.demoCarsForSale.repository.PicRepository;
+import com.example.demoCarsForSale.repository.UserPhoneRepository;
+import com.example.demoCarsForSale.repository.UserRepository;
 import com.example.demoCarsForSale.services.AdService;
 import com.example.demoCarsForSale.services.mapper.AdResponseRequestMapper;
 import com.example.demoCarsForSale.services.mapper.PaginationMapper;
 import com.example.demoCarsForSale.services.mapper.PicRequestResponseMapper;
 import com.example.demoCarsForSale.services.mapper.UserPhoneRequestResponseMapper;
-import com.example.demoCarsForSale.web.dto.projection.AdShortInfo;
 import com.example.demoCarsForSale.web.dto.request.AdRequest;
 import com.example.demoCarsForSale.web.dto.response.AdDetailedResponse;
 import com.example.demoCarsForSale.web.dto.response.AdResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,10 +29,10 @@ import java.util.List;
 @Service("adService")
 @RequiredArgsConstructor
 public class AdServiceImpl implements AdService {
-    private final UserDao userDao;
-    private final AdDao adDao;
-    private final PicDao picDao;
-    private final UserPhoneDao userPhoneDao;
+    private final UserRepository userRepository;
+    private final AdRepository adRepository;
+    private final PicRepository picRepository;
+    private final UserPhoneRepository userPhoneRepository;
 
     @Transactional
     @Override
@@ -41,15 +41,17 @@ public class AdServiceImpl implements AdService {
         List<Pic> pics = PicRequestResponseMapper.toPics(model.getPics());
         Ad ad = AdResponseRequestMapper.toAd(model);
 
-        User user = userDao.findById(userId);
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new EntityNotFoundException("Oops something went wrong, user was grabbed by aliens"));
+
         ad.setUser(user);
-        Ad createdAd = adDao.save(ad);
+        Ad createdAd = adRepository.save(ad);
 
         pics.forEach(pic -> pic.setAd(createdAd));
-        picDao.savePics(pics);
+        picRepository.saveAll(pics);
 
         phones.forEach(phone -> phone.setUser(user));
-        userPhoneDao.savePhones(phones);
+        userPhoneRepository.saveAll(phones);
 
         AdDetailedResponse adDetailedResponse = AdResponseRequestMapper.toDetailedResponse(ad);
         adDetailedResponse.setPics(PicRequestResponseMapper.toResponses(pics));
@@ -61,15 +63,11 @@ public class AdServiceImpl implements AdService {
     @Transactional
     @Override
     public AdDetailedResponse getDetailedInfoAboutAd(long id) {
-        User user;
-        Ad ad;
+        Ad ad = adRepository.findAdWithPicByAdId(id)
+            .orElseThrow(() -> new EntityNotFoundException("Ad not found"));
 
-        if (adDao.existsById(id)) {
-            ad = adDao.getDetailedInfoAboutAd(id);
-            user = userDao.findUserWithPhones(ad.getUser().getUserId());
-        } else {
-            throw new EntityNotFoundException("Ad not found");
-        }
+        User user = userRepository.findUserWithUserPhonesByUserId(ad.getUser().getUserId())
+            .orElseThrow(() -> new EntityNotFoundException("Oops something went wrong, user was grabbed by aliens"));
 
         AdDetailedResponse adDetailedResponse = AdResponseRequestMapper.toDetailedResponse(ad);
         adDetailedResponse.setPics(PicRequestResponseMapper.toResponses(ad.getPics()));
@@ -81,22 +79,18 @@ public class AdServiceImpl implements AdService {
     @Transactional
     @Override
     public void deleteAd(long adId, long userId) {
-        Ad adToDelete = adDao.existsById(adId) ?
-            adDao.getDetailedInfoAboutAd(adId) :
-            null;
+        Ad adToDelete = adRepository.findById(adId)
+            .orElseThrow(() -> new EntityNotFoundException("no ad to delete"));
 
-        if (adToDelete != null && isAbleToDelete(adToDelete.getUser().getUserId(), userId)) {
-            adDao.delete(adId);
-        } else {
-            throw new BadRequestException("Permission denied");
-        }
+        isValidAction(isAbleToDelete(adToDelete.getUser().getUserId(), userId),
+            () -> new BadRequestException("Permission denied"));
+
+        adRepository.deleteById(adId);
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override
-    public List<AdResponse> getRecords(int start, int total) {
-        List<AdShortInfo> adShortInfos = adDao.getRecords(start, total);
-
-        return PaginationMapper.toResponses(adShortInfos);
+    public List<AdResponse> getRecords(Pageable pageable) {
+        return PaginationMapper.toResponses(adRepository.findAllBy(pageable).getContent());
     }
 }

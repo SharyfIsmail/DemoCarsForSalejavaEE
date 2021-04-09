@@ -1,6 +1,6 @@
 package com.example.demoCarsForSale.services.mapper;
 
-import com.example.demoCarsForSale.dao.model.Ad;
+import com.example.demoCarsForSale.pojo.Ad;
 import com.example.demoCarsForSale.web.dto.request.AdRequest;
 import com.example.demoCarsForSale.web.dto.response.AdDetailedResponse;
 import lombok.AccessLevel;

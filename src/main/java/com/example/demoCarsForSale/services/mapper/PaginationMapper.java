@@ -17,10 +17,10 @@ public final class PaginationMapper {
                 .condition(x.getCondition().toString())
                 .year(x.getYear())
                 .brand(x.getBrand())
-                .userName(x.getUserName())
+                .userName(x.getUser())
                 .model(x.getModel())
                 .createDate(x.getCreateDate().toString())
-                .picCount(x.getPicSize())
+                .picCount(x.getPics())
                 .build())
             .collect(Collectors.toList());
     }

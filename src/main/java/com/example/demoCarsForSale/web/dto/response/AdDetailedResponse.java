@@ -1,6 +1,6 @@
 package com.example.demoCarsForSale.web.dto.response;
 
-import com.example.demoCarsForSale.dao.model.Condition;
+import com.example.demoCarsForSale.pojo.Condition;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

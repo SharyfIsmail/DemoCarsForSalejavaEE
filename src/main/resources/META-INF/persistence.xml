@@ -4,10 +4,10 @@
              version="2.0">
     <persistence-unit name="myPersistence">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>com.example.demoCarsForSale.dao.model.User</class>
-        <class>com.example.demoCarsForSale.dao.model.Ad</class>
-        <class>com.example.demoCarsForSale.dao.model.UserPhone</class>
-        <class>com.example.demoCarsForSale.dao.model.Pic</class>
+        <class>com.example.demoCarsForSale.pojo.User</class>
+        <class>com.example.demoCarsForSale.pojo.Ad</class>
+        <class>com.example.demoCarsForSale.pojo.UserPhone</class>
+        <class>com.example.demoCarsForSale.pojo.Pic</class>
 
         <properties>
             <!-- SQL stuff -->

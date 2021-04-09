@@ -1,6 +1,6 @@
 package com.example.demoCarsForSale.web.dto.request;
 
-import com.example.demoCarsForSale.dao.model.Condition;
+import com.example.demoCarsForSale.pojo.Condition;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -1,6 +1,6 @@
 package com.example.demoCarsForSale.security;
 
-import com.example.demoCarsForSale.dao.model.User;
+import com.example.demoCarsForSale.pojo.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -37,6 +37,7 @@ public final class TokenUtil {
     }
 
     public static String getEmailFromToken(String token) {
+
         return extractClaim(token, Claims::getSubject);
     }
 

@@ -1,23 +1,20 @@
 package com.example.demoCarsForSale.services;
 
-import com.example.demoCarsForSale.dao.model.User;
-import com.example.demoCarsForSale.web.dto.request.UserLogInRequest;
 import com.example.demoCarsForSale.web.dto.request.UserSignUpRequest;
 import com.example.demoCarsForSale.web.dto.request.UserUpdateRequest;
 import com.example.demoCarsForSale.web.dto.response.UserExtraInfoResponse;
 import com.example.demoCarsForSale.web.dto.response.UserResponse;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 public interface UserService {
 
-    List<UserResponse> findAll();
-
-    List<UserExtraInfoResponse> findUsersExtraInfo();
+    List<UserExtraInfoResponse> findUsersExtraInfo(Pageable pageable);
 
     void delete(long id);
-
-    UserResponse logIn(UserLogInRequest userLogInRequest);
 
     UserResponse createUser(UserSignUpRequest userSignUpRequest);
 
@@ -29,7 +26,13 @@ public interface UserService {
             userUpdateRequest.getUserPassword1().equals(userUpdateRequest.getUserPassword2());
     }
 
-    default boolean checkAuth(UserLogInRequest userLogInRequest, User user) {
-        return user.getPassword().equals(userLogInRequest.getUserPassword());
+    default void validatePassword(boolean isValid, Supplier<? extends RuntimeException> supplier) {
+        if (!isValid) {
+            supplier.get();
+        }
+    }
+
+    default <T, R> R converter(T fromType, R toType, BiFunction<T, R, R> fun) {
+        return fun.apply(fromType, toType);
     }
 }

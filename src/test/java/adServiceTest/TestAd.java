@@ -1,23 +1,5 @@
 package adServiceTest;
 
-import com.example.demoCarsForSale.web.dto.request.AdRequest;
-import com.example.demoCarsForSale.web.dto.request.PhoneRequest;
-import com.example.demoCarsForSale.web.dto.request.PicRequest;
-import com.example.demoCarsForSale.web.dto.request.UserSignUpRequest;
-import com.example.demoCarsForSale.web.dto.response.AdDetailedResponse;
-import com.example.demoCarsForSale.web.dto.response.UserResponse;
-import com.example.demoCarsForSale.dao.model.Condition;
-import com.example.demoCarsForSale.services.UserService;
-import com.example.demoCarsForSale.services.impl.AdServiceImpl;
-import com.example.demoCarsForSale.services.impl.PicServiceImpl;
-import com.example.demoCarsForSale.services.impl.UserServiceImpl;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
-import java.util.Collections;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestAd {
