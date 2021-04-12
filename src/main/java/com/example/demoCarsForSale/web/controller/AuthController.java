@@ -44,8 +44,7 @@ public class AuthController extends SecurityContextPrincipalSupplier {
         }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        User user = (User) userService.loadUserByUsername(userLogInRequest.getUserEmail());
+        User user = (User) authentication.getPrincipal();
         String token = TokenUtil.generateToken(user);
 
         return new ResponseEntity<>(JwtResponse.builder()

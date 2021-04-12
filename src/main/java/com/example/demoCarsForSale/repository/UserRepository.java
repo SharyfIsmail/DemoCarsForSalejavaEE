@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<User> findByEmail(String email);
+    Optional<User> findByEmail(@Param("email") String email);
 
     @EntityGraph(attributePaths = "ads")
     Slice<UserExtraInfo> findAllBy(Pageable pageable);
