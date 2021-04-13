@@ -1,3 +1,5 @@
+package service_test;
+
 import com.example.demoCarsForSale.BootApplication;
 import com.example.demoCarsForSale.services.UserService;
 import com.example.demoCarsForSale.web.dto.request.UserSignUpRequest;
@@ -13,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = BootApplication.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ServiceTests {
+public class UserServiceTest {
     private static UserResponse userResponse;
 
     @Autowired
@@ -23,7 +25,7 @@ public class ServiceTests {
     @Order(1)
     public void createUser() {
         UserSignUpRequest userSignUpRequest = UserSignUpRequest.builder()
-            .userEmail("abcAbc")
+            .userEmail("abcAbac")
             .userName("Sharyf")
             .userPassword("blablablabla")
             .build();
@@ -37,7 +39,7 @@ public class ServiceTests {
     public void updateUser() {
         UserUpdateRequest userUpdateRequest = UserUpdateRequest.builder()
             .userName("Andrey")
-            .userEmail("cba")
+            .userEmail("abcAbac")
             .userPassword1("blablabla")
             .userPassword2("blablabla")
             .build();

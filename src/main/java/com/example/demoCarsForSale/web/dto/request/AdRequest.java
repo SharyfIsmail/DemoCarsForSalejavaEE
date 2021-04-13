@@ -1,6 +1,8 @@
 package com.example.demoCarsForSale.web.dto.request;
 
 import com.example.demoCarsForSale.pojo.Condition;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +12,8 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 public class AdRequest {

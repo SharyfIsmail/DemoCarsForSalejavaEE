@@ -53,6 +53,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserResponse createUser(UserSignUpRequest userSignUpRequest) {
         userSignUpRequest.setUserPassword(passwordEncoder().encode(userSignUpRequest.getUserPassword()));
 
+        checkValidation(!userRepository.existsByEmail(userSignUpRequest.getUserEmail()),
+            () -> new BadRequestException(userSignUpRequest.getUserEmail() + " already exists"));
+
         User userEntity = userRepository.save(UserResponseRequestMapper
             .toUser(userSignUpRequest));
 
@@ -62,7 +65,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     @Override
     public void updateUser(UserUpdateRequest userUpdateRequest, long userId) {
-        validatePassword(checkNewPassword(userUpdateRequest),
+        checkValidation(checkNewPassword(userUpdateRequest),
             () -> new BadRequestException("Passwords don't match"));
 
         User user = userRepository.findById(userId).orElseThrow(

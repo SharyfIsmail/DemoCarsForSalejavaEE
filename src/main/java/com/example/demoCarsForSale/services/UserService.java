@@ -26,11 +26,12 @@ public interface UserService {
             userUpdateRequest.getUserPassword1().equals(userUpdateRequest.getUserPassword2());
     }
 
-    default void validatePassword(boolean isValid, Supplier<? extends RuntimeException> supplier) {
+    default void checkValidation(boolean isValid, Supplier<? extends RuntimeException> supplier) {
         if (!isValid) {
-            supplier.get();
+            throw supplier.get();
         }
     }
+
 
     default <T, R> R converter(T fromType, R toType, BiFunction<T, R, R> fun) {
         return fun.apply(fromType, toType);

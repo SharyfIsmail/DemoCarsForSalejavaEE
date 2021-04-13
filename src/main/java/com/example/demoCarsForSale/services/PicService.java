@@ -13,7 +13,7 @@ public interface PicService {
 
     default void isValidAction(boolean isValid, Supplier<? extends RuntimeException> supplier) {
         if (!isValid) {
-            supplier.get();
+            throw supplier.get();
         }
     }
 }

@@ -37,7 +37,6 @@ public final class TokenUtil {
     }
 
     public static String getEmailFromToken(String token) {
-
         return extractClaim(token, Claims::getSubject);
     }
 
