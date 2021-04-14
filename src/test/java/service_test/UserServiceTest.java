@@ -1,6 +1,5 @@
 package service_test;
 
-import com.example.demoCarsForSale.BootApplication;
 import com.example.demoCarsForSale.exceptions.BadRequestException;
 import com.example.demoCarsForSale.exceptions.EntityNotFoundException;
 import com.example.demoCarsForSale.pojo.User;
@@ -14,24 +13,21 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Optional;
 
-@SpringBootTest(classes = BootApplication.class)
 public class UserServiceTest {
-    @MockBean
+    @Mock
     UserRepository userRepository;
-
     private UserService userService;
-
     private static UserResponse userResponse;
     private static UserSignUpRequest userSignUpRequest;
 
     @BeforeEach
     public void setUp() {
+        userRepository = Mockito.mock(UserRepository.class);
         userService = new UserServiceImpl(userRepository);
 
         userSignUpRequest = UserSignUpRequest.builder()
@@ -61,6 +57,8 @@ public class UserServiceTest {
     public void failedSignUpWithInvalidUser() {
         Mockito.when(userRepository.existsByEmail(ArgumentMatchers.any(String.class))).thenReturn(true);
         Assertions.assertThrows(BadRequestException.class, () -> userService.createUser(userSignUpRequest));
+
+        Mockito.verify(userRepository, Mockito.times(1)).existsByEmail(ArgumentMatchers.anyString());
     }
 
     @Test
@@ -81,6 +79,8 @@ public class UserServiceTest {
         Mockito.when(userRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(user));
 
         Assertions.assertDoesNotThrow(() -> userService.updateUser(userUpdateRequest, 1L));
+
+        Mockito.verify(userRepository, Mockito.times(1)).findById(ArgumentMatchers.anyLong());
     }
 
     @Test
@@ -103,8 +103,9 @@ public class UserServiceTest {
             .userPassword2("somePassword")
             .userPassword1("somePassword")
             .build();
-        Mockito.when(userRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.empty());
-
+        Mockito.doReturn(Optional.empty()).when(userRepository).findById(ArgumentMatchers.anyLong());
         Assertions.assertThrows(EntityNotFoundException.class, () -> userService.updateUser(userUpdateRequest, 1L));
+
+        Mockito.verify(userRepository, Mockito.times(1)).findById(ArgumentMatchers.anyLong());
     }
 }

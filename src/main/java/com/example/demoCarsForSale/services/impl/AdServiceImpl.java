@@ -60,7 +60,7 @@ public class AdServiceImpl implements AdService {
         return adDetailedResponse;
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     @Override
     public AdDetailedResponse getDetailedInfoAboutAd(long id) {
         Ad ad = adRepository.findAdWithPicByAdId(id)
@@ -88,7 +88,7 @@ public class AdServiceImpl implements AdService {
         adRepository.deleteById(adId);
     }
 
-    @Transactional(propagation = Propagation.SUPPORTS)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     @Override
     public List<AdResponse> getRecords(Pageable pageable) {
         return PaginationMapper.toResponses(adRepository.findAllBy(pageable).getContent());
