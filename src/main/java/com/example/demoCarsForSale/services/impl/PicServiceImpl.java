@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service("picService")
 @RequiredArgsConstructor
 public class PicServiceImpl implements PicService {
@@ -30,7 +32,8 @@ public class PicServiceImpl implements PicService {
             .orElseThrow(() -> new EntityNotFoundException("Ad is missing"));
 
         ad.removePicFromAd(picToDelete);
-
+        ad.setEditDate(LocalDateTime.now());
+        
         adRepository.save(ad);
     }
 }
