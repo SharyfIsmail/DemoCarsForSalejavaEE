@@ -24,16 +24,13 @@ public class PicServiceImpl implements PicService {
     public void delete(long id, long userId) {
         Pic picToDelete = picRepository.findPicWithAdByPicId(id).orElseThrow(
             () -> new EntityNotFoundException("pic is missing"));
+        Ad ad = picToDelete.getAd();
 
-        isValidAction(isAbleToDelete(userId, picToDelete.getAd().getUser().getUserId()),
+        isValidAction(isAbleToDelete(userId, ad.getUser().getUserId()),
             () -> new ForbiddenActionException("Permission denied"));
 
-        Ad ad = adRepository.findAdWithPicByAdId(picToDelete.getAd().getAdId())
-            .orElseThrow(() -> new EntityNotFoundException("Ad is missing"));
-
-        ad.removePicFromAd(picToDelete);
+        picRepository.delete(picToDelete);
         ad.setEditDate(LocalDateTime.now());
-        
         adRepository.save(ad);
     }
 }

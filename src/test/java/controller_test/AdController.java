@@ -3,6 +3,7 @@ package controller_test;
 import com.example.demoCarsForSale.BootApplication;
 import com.example.demoCarsForSale.pojo.Condition;
 import com.example.demoCarsForSale.services.AdService;
+import com.example.demoCarsForSale.services.PicService;
 import com.example.demoCarsForSale.services.UserService;
 import com.example.demoCarsForSale.web.dto.request.AdRequest;
 import com.example.demoCarsForSale.web.dto.request.PhoneRequest;
@@ -14,6 +15,7 @@ import com.example.demoCarsForSale.web.dto.response.JwtResponse;
 import com.example.demoCarsForSale.web.dto.response.UserResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,7 @@ public class AdController {
     @Autowired
     private UserService userService;
     @Autowired
-    private AdService adService;
+    private PicService picService;
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static UserResponse userResponse;
@@ -89,6 +91,13 @@ public class AdController {
             .andReturn();
 
         adDetailedResponse = MAPPER.readValue(mvcResult.getResponse().getContentAsString(), AdDetailedResponse.class);
+
+        Assertions.assertEquals(adDetailedResponse.getBrand(), adRequest.getBrand());
+        Assertions.assertEquals(adDetailedResponse.getCondition(), adRequest.getCondition());
+        Assertions.assertEquals(adDetailedResponse.getUserName(), userResponse.getUserName());
+        Assertions.assertEquals(Integer.valueOf(adDetailedResponse.getPower()), adRequest.getPower());
+        Assertions.assertEquals(Integer.valueOf(adDetailedResponse.getYear()), adRequest.getYear());
+        Assertions.assertEquals(adDetailedResponse.getModel(), adRequest.getModel());
     }
 
     @AfterEach
