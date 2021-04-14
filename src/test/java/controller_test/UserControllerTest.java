@@ -33,8 +33,6 @@ public class UserControllerTest {
     private static JwtResponse response;
     @Autowired
     private UserService userService;
-
-
     @Autowired
     private MockMvc mockMvc;
 
