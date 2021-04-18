@@ -1,8 +1,6 @@
 package com.example.demoCarsForSale.repository;
 
-import com.example.demoCarsForSale.pojo.Ad;
 import com.example.demoCarsForSale.pojo.User;
-import com.example.demoCarsForSale.pojo.UserPhone;
 import com.example.demoCarsForSale.web.dto.projection.UserExtraInfo;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;

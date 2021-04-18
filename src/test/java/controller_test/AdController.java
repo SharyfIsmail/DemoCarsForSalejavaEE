@@ -52,12 +52,12 @@ public class AdController {
     @BeforeEach
     public void setUp() throws Exception {
         UserSignUpRequest userSignUpRequest = UserSignUpRequest.builder()
-            .userEmail("fma.com")
+            .userEmail("ssa.com")
             .userName("Sharyf")
             .userPassword("blablablabla")
             .build();
         UserLogInRequest userLogInRequest = UserLogInRequest.builder()
-            .userEmail("fma.com")
+            .userEmail("ssa.com")
             .userPassword("blablablabla")
             .build();
         userResponse = userService.createUser(userSignUpRequest);

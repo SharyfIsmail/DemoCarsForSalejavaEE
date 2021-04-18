@@ -1,6 +1,8 @@
 package com.example.demoCarsForSale.repository;
 
 import com.example.demoCarsForSale.pojo.Ad;
+import com.example.demoCarsForSale.pojo.Pic;
+import com.example.demoCarsForSale.pojo.User;
 import com.example.demoCarsForSale.web.dto.projection.AdShortInfo;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -23,9 +25,10 @@ public interface AdRepository extends JpaRepository<Ad, Long> {
     Optional<Ad> findAdWithPicByAdId(@Param("adId") long adId);
 
     @Query("SELECT ad.user FROM Ad ad where ad in :ads")
-    void findOwnersInAds(@Param("ads") List<Ad> ads);
+    List<User> findOwnersInAds(@Param("ads") List<Ad> ads);
 
     @EntityGraph(attributePaths = "pics")
     @Query("SELECT ads from Ad ads where ads in :ads")
     List<Ad> findwithPics(@Param("ads") List<Ad> ads);
+
 }

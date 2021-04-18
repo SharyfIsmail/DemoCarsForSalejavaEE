@@ -85,6 +85,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public List<User> testUser() {
         List<User> users = userRepository.findAll();
         users = userRepository.findUsersFetchingAds(users);
+        userRepository.existsByEmail(users.get(0).getEmail());
+
         users = userRepository.findUsersFetchingPhones(users);
 
         return users;

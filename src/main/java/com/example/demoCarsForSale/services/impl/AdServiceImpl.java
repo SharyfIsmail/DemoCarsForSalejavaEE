@@ -81,8 +81,7 @@ public class AdServiceImpl implements AdService {
     public List<Ad> test() {
         List<Ad> lists = adRepository.findAll();
         adRepository.findOwnersInAds(lists);
-        adRepository.findwithPics(lists);
-        lists.forEach(x -> x.getPics().forEach(y -> System.out.println(y.getCarPic())));
+         adRepository.findwithPics(lists);
         return lists;
     }
 
