@@ -45,9 +45,9 @@ public class AdServiceImpl implements AdService {
             .orElseThrow(() -> new EntityNotFoundException("Oops something went wrong, user was grabbed by aliens"));
 
         ad.setUser(user);
-        Ad createdAd = adRepository.save(ad);
+        adRepository.save(ad);
 
-        pics.forEach(pic -> pic.setAd(createdAd));
+        pics.forEach(pic -> pic.setAd(ad));
         picRepository.saveAll(pics);
 
         phones.forEach(phone -> phone.setUser(user));
@@ -74,6 +74,16 @@ public class AdServiceImpl implements AdService {
         adDetailedResponse.setPhones(UserPhoneRequestResponseMapper.toResponses(user.getUserPhones()));
 
         return adDetailedResponse;
+    }
+
+    @Transactional
+    @Override
+    public List<Ad> test() {
+        List<Ad> lists = adRepository.findAll();
+        adRepository.findOwnersInAds(lists);
+        adRepository.findwithPics(lists);
+        lists.forEach(x -> x.getPics().forEach(y -> System.out.println(y.getCarPic())));
+        return lists;
     }
 
     @Transactional

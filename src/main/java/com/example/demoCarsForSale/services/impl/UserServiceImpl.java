@@ -80,6 +80,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             }));
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public List<User> testUser() {
+        List<User> users = userRepository.findAll();
+        users = userRepository.findUsersFetchingAds(users);
+        users = userRepository.findUsersFetchingPhones(users);
+
+        return users;
+    }
+
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String email) {

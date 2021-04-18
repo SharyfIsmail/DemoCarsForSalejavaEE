@@ -1,5 +1,6 @@
 package com.example.demoCarsForSale.services;
 
+import com.example.demoCarsForSale.pojo.User;
 import com.example.demoCarsForSale.web.dto.request.UserSignUpRequest;
 import com.example.demoCarsForSale.web.dto.request.UserUpdateRequest;
 import com.example.demoCarsForSale.web.dto.response.UserExtraInfoResponse;
@@ -32,6 +33,8 @@ public interface UserService {
         }
     }
 
+
+    List<User> testUser();
 
     default <T, R> R converter(T fromType, R toType, BiFunction<T, R, R> fun) {
         return fun.apply(fromType, toType);

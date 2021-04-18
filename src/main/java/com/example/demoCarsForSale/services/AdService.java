@@ -1,5 +1,6 @@
 package com.example.demoCarsForSale.services;
 
+import com.example.demoCarsForSale.pojo.Ad;
 import com.example.demoCarsForSale.web.dto.request.AdRequest;
 import com.example.demoCarsForSale.web.dto.response.AdDetailedResponse;
 import com.example.demoCarsForSale.web.dto.response.AdResponse;
@@ -27,4 +28,6 @@ public interface AdService {
             supplier.get();
         }
     }
+
+    List<Ad> test();
 }

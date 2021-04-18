@@ -67,7 +67,7 @@ public class UserControllerTest {
     @Test
     public void failedSignUp() throws Exception {
         UserSignUpRequest userSignUpRequest = UserSignUpRequest.builder()
-            .userEmail("xandrey95xlive.com")
+            .userEmail("fma.com")
             .userName("Sharyf")
             .userPassword("blablablabla")
             .build();

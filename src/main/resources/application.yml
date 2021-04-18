@@ -26,4 +26,8 @@ spring:
       username: postgres
       password: admin
     url: jdbc:postgresql://localhost:5422/postgres
+  flyway:
+    baseline-on-migrate: true
+    check-location: true
+
 

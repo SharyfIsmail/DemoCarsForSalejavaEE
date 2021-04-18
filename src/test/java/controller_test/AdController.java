@@ -1,9 +1,11 @@
 package controller_test;
 
 import com.example.demoCarsForSale.BootApplication;
+import com.example.demoCarsForSale.pojo.Ad;
 import com.example.demoCarsForSale.pojo.Condition;
+import com.example.demoCarsForSale.pojo.User;
+import com.example.demoCarsForSale.repository.AdRepository;
 import com.example.demoCarsForSale.services.AdService;
-import com.example.demoCarsForSale.services.PicService;
 import com.example.demoCarsForSale.services.UserService;
 import com.example.demoCarsForSale.web.dto.request.AdRequest;
 import com.example.demoCarsForSale.web.dto.request.PhoneRequest;
@@ -27,8 +29,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.List;
 
 @SpringBootTest(classes = BootApplication.class)
 @AutoConfigureMockMvc
@@ -37,9 +41,9 @@ public class AdController {
     private MockMvc mockMvc;
     @Autowired
     private UserService userService;
-    @Autowired
-    private PicService picService;
 
+    @Autowired
+    private AdService adService;
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static UserResponse userResponse;
     private static JwtResponse jwtResponse;
@@ -89,9 +93,17 @@ public class AdController {
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtResponse.getToken()))
             .andExpect(MockMvcResultMatchers.status().isCreated())
             .andReturn();
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/ads")
+            .content(MAPPER.writeValueAsString(adRequest))
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtResponse.getToken()))
+            .andExpect(MockMvcResultMatchers.status().isCreated())
+            .andReturn();
 
         adDetailedResponse = MAPPER.readValue(mvcResult.getResponse().getContentAsString(), AdDetailedResponse.class);
 
+        List<Ad> ads = adService.test();
+        List<User> users = userService.testUser();
         Assertions.assertEquals(adDetailedResponse.getBrand(), adRequest.getBrand());
         Assertions.assertEquals(adDetailedResponse.getCondition(), adRequest.getCondition());
         Assertions.assertEquals(adDetailedResponse.getUserName(), userResponse.getUserName());

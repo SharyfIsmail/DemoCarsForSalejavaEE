@@ -6,9 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,4 +21,11 @@ public interface AdRepository extends JpaRepository<Ad, Long> {
 
     @EntityGraph(attributePaths = "pics")
     Optional<Ad> findAdWithPicByAdId(@Param("adId") long adId);
+
+    @Query("SELECT ad.user FROM Ad ad where ad in :ads")
+    void findOwnersInAds(@Param("ads") List<Ad> ads);
+
+    @EntityGraph(attributePaths = "pics")
+    @Query("SELECT ads from Ad ads where ads in :ads")
+    List<Ad> findwithPics(@Param("ads") List<Ad> ads);
 }
