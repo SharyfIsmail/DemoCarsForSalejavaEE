@@ -1,7 +1,6 @@
 package com.example.demoCarsForSale.repository;
 
 import com.example.demoCarsForSale.pojo.Ad;
-import com.example.demoCarsForSale.pojo.Pic;
 import com.example.demoCarsForSale.pojo.User;
 import com.example.demoCarsForSale.web.dto.projection.AdShortInfo;
 import org.springframework.data.domain.Pageable;
