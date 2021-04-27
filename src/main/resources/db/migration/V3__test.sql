@@ -1,2 +1,0 @@
-ALTER TABLE users
-    drop COLUMN NICK_NAME;

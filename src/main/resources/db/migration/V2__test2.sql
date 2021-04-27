@@ -1,3 +1,0 @@
-ALTER TABLE users
-ADD COLUMN NICK_NAME varchar(255);
-COMMIT;

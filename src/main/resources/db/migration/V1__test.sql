@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS ADS
 (
     AD_ID           BIGSERIAL PRIMARY KEY NOT NULL,
     USER_ID         BIGINT                NOT NULL,
-    YEAR            SMALLINT              NOT NULL,
+    YEAR            INT                   NOT NULL,
     BRAND           VARCHAR(255)          NOT NULL,
     MODEL           VARCHAR(255)          NOT NULL,
     ENGINE_CAPACITY INT,
